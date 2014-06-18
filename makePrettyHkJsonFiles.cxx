@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
-  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA2");
+  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA2",60);
 
   
 
@@ -149,24 +149,37 @@ int main(int argc, char **argv) {
 	sprintf(elementName,"ssMag%d_%d",i,j);
 	strcpy(elementLabel,ssMagNames[i][j]);
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssMag[i][j]);
+
       }
     }
     for( int i=0; i<4; ++i ) {
-      sprintf(elementName,"ssElevation%d",i);
-      strcpy(elementLabel,ssNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssElevation[i]);
+       sprintf(elementName,"ssElevation%d",i);
+       strcpy(elementLabel,ssNames[i]);       
+       if(hkPtr->ssGoodFlag[i])
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssElevation[i],AwareAverageType::kDefault,kTRUE,-999);
+       else
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
+       
+       
 
-      sprintf(elementName,"ssAzimuth%d",i);
-      strcpy(elementLabel,ssNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuth[i]);
-
-      sprintf(elementName,"ssAzimuthAdu5%d",i);
-      strcpy(elementLabel,ssNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuthAdu5[i]);
-
-      sprintf(elementName,"ssGoodFlag%d",i);
-      strcpy(elementLabel,ssNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssGoodFlag[i]);
+       
+       sprintf(elementName,"ssAzimuthRaw%d",i);
+       strcpy(elementLabel,ssNames[i]);
+       if(hkPtr->ssGoodFlag[i])
+	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuth[i],AwareAverageType::kDefault,kTRUE,-999);
+       else
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
+       
+       sprintf(elementName,"ssAzimuthAdu5%d",i);
+       strcpy(elementLabel,ssNames[i]);
+       if(hkPtr->ssGoodFlag[i])
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuthAdu5[i],AwareAverageType::kAngleDegree,kTRUE,-999);
+       else
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kAngleDegree,kTRUE,-999);
+       
+       sprintf(elementName,"ssGoodFlag%d",i);
+       strcpy(elementLabel,ssNames[i]);
+       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssGoodFlag[i]);
     }       
     
   }

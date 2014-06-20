@@ -52,18 +52,10 @@ GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
 
 
 
-PROGRAM =    makePrettyHkJsonFiles 
+PROGRAM =    makePrettyHkJsonFiles makeHeaderJsonFiles
 
 all : $(PROGRAM)
 
-makeHeaderJsonFiles : makeEventJsonFiles.cxx
-	@echo "<**Linking**> "  
-	$(LD)  $(CXXFLAGS) -DMAKE_HEADER_FILES $(LDFLAGS)  $<  $(LIBS) -o $@
-
-
-makeEventJsonFiles : makeEventJsonFiles.cxx
-	@echo "<**Linking**> "  
-	$(LD)  $(CXXFLAGS) -DMAKE_EVENT_FILES $(LDFLAGS)  $<  $(LIBS) -o $@
 
 % :  %.$(SRCSUF) 
 	@echo "<**Linking**> "  

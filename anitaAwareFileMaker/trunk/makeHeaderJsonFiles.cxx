@@ -111,8 +111,8 @@ int main(int argc, char **argv) {
 
 
     for(int bit=0;bit<16;bit++) {
-      sprint(elementName,"l3TrigBit%d",bit);
-      sprint(elementLabel,"L3 Phi %d",bit+1);
+      sprintf(elementName,"l3TrigBit%d",bit);
+      sprintf(elementLabel,"L3 Phi %d",bit+1);
       int value=hdPtr->isInL3Pattern(bit);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->eventNumber);
       

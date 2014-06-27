@@ -9,7 +9,7 @@ SRCSUF=cxx
 DLLSUF=so
 OBJSUF=o
 
-SYSLIBS=-L /home/rjn/thirdParty/lib/ -l profiler
+SYSLIBS=#-L /home/rjn/thirdParty/lib/ -l profiler
 
 #Toggles the FFT functions on and off
 USE_FFT_TOOLS=1

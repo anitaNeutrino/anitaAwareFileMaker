@@ -75,12 +75,12 @@ int main(int argc, char **argv) {
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
-  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA2",60);
+  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA3",60);
 
   
 
   char instrumentName[20];
-  sprintf(instrumentName,"ANITA2");
+  sprintf(instrumentName,"ANITA3");
 
 
   //  numEntries=1;

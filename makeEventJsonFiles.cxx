@@ -63,6 +63,10 @@ int main(int argc, char **argv) {
     return -1;
   }
   TTree *headTree = (TTree*) fpHead->Get("headTree");
+  if(!headTree) {
+    std::cerr << "Can't find headTree\n";
+    return -1;
+  }
   headTree->SetBranchAddress("header",&hdPtr);
 
   TFile *fp = TFile::Open(argv[2]);
@@ -71,6 +75,7 @@ int main(int argc, char **argv) {
     std::cerr << "Can't find eventTree\n";
     return -1;
   }
+  eventTree->SetBranchAddress("event",&rawEvPtr);
    
 
 

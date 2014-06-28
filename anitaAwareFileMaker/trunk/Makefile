@@ -52,7 +52,7 @@ GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
 
 
 
-PROGRAM =    makePrettyHkJsonFiles makeHeaderJsonFiles
+PROGRAM =    makePrettyHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles
 
 all : $(PROGRAM)
 

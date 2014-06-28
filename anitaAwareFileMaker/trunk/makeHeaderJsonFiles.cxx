@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
   headTree->GetEntry(0);
 
 
-  TTimeStamp timeStamp((time_t)hdPtr->realTime,(Int_t)0);
+  TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t firstTime=timeStamp.GetSec();
   UInt_t runNumber=hdPtr->run;
@@ -114,6 +114,37 @@ int main(int argc, char **argv) {
       sprintf(elementName,"l3TrigBit%d",bit);
       sprintf(elementLabel,"L3 Phi %d",bit+1);
       int value=hdPtr->isInL3Pattern(bit);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+      
+      
+      sprintf(elementName,"upperL2TrigBit%d",bit);
+      sprintf(elementLabel,"L2 Upper Phi %d",bit+1);
+      value=hdPtr->isInL2Pattern(bit,AnitaRing::kUpperRing);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"lowerL2TrigBit%d",bit);
+      sprintf(elementLabel,"L2 Lower Phi %d",bit+1);
+      value=hdPtr->isInL2Pattern(bit,AnitaRing::kLowerRing);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"nadirL2TrigBit%d",bit);
+      sprintf(elementLabel,"L2 Nadir Phi %d",bit+1);
+      value=hdPtr->isInL2Pattern(bit,AnitaRing::kNadirRing);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"upperL1TrigBit%d",bit);
+      sprintf(elementLabel,"L1 Upper Phi %d",bit+1);
+      value=hdPtr->isInL1Pattern(bit,AnitaRing::kUpperRing);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"lowerL1TrigBit%d",bit);
+      sprintf(elementLabel,"L1 Lower Phi %d",bit+1);
+      value=hdPtr->isInL1Pattern(bit,AnitaRing::kLowerRing);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"nadirL1TrigBit%d",bit);
+      sprintf(elementLabel,"L1 Nadir Phi %d",bit+1);
+      value=hdPtr->isInL1Pattern(bit,AnitaRing::kNadirRing);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
       
     }

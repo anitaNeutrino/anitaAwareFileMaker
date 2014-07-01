@@ -22,5 +22,6 @@ cd /home/radio/anita14/anitaAwareFileMaker/
 source setupAwareVariables.sh
 if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
-    ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/prettyHkFile${RUN}.root     
+    ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/prettyHkFile${RUN}.root    
+    ./makeEventJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root ${ROOT_RUN_DIR}/eventFile${RUN}.root  &
 fi

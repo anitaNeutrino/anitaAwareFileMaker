@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////  makeMonitorHkJsonFiles
-////      This is a simple program that converts ANITA Monitor hk root files 
+////  makeOtherMonitorHkJsonFiles
+////      This is a simple program that converts ANITA Other Monitor hk root files 
 ////      into JSON files that can be read by the AWARE web plotter code
 ////
 ////    June 2014,  r.nichol@ucl.ac.uk 
@@ -11,7 +11,7 @@
 #include <iostream>
 
 //ANITA EventReaderRoot Includes
-#include "MonitorHk.h"
+#include "OtherMonitorHk.h"
 #include "CalibratedHk.h"
 
 //ROOT Includes
@@ -26,12 +26,12 @@
 #include "AwareRunDatabase.h"
 
 
-MonitorHk *monitorPtr;
+OtherMonitorHk *otherPtr;
 
 void usage(char **argv) 
 {  
   std::cout << "Usage\n" << argv[0] << " <input file>\n";
-  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/monitorFile13.root\n";  
+  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/prettyHkFile13.root\n";  
 }
 
 
@@ -47,31 +47,31 @@ int main(int argc, char **argv) {
     std::cerr << "Can't open file\n";
     return -1;
   }
-  TTree *monitorTree = (TTree*) fp->Get("monitorTree");
-  if(!monitorTree) {
-    std::cerr << "Can't find monitorTree\n";
+  TTree *otherTree = (TTree*) fp->Get("otherTree");
+  if(!otherTree) {
+    std::cerr << "Can't find otherTree\n";
     return -1;
   }
 
-  if(monitorTree->GetEntries()<1) {
-    std::cerr << "No entries in monitorTree\n";
+  if(otherTree->GetEntries()<1) {
+    std::cerr << "No entries in otherTree\n";
     return -1;
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  monitorTree->SetBranchAddress("mon",&monitorPtr);
+  otherTree->SetBranchAddress("othermon",&otherPtr);
   
-  monitorTree->GetEntry(0);
+  otherTree->GetEntry(0);
 
 
-  TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
+  TTimeStamp timeStamp((time_t)otherPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t firstTime=timeStamp.GetSec();
-  UInt_t runNumber=monitorPtr->run;
+  UInt_t runNumber=otherPtr->run;
 
 
   //Now we set up out run list
-  Long64_t numEntries=monitorTree->GetEntries();
+  Long64_t numEntries=otherTree->GetEntries();
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
@@ -90,46 +90,49 @@ int main(int argc, char **argv) {
     }
 
     //This line gets the Hk Entry
-    monitorTree->GetEntry(event);
+    otherTree->GetEntry(event);
 
-    TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
+    TTimeStamp timeStamp((time_t)otherPtr->realTime,(Int_t)0);
     //    std::cout << "Run: "<< realEvPtr->
 
     //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
     //Summary file fun
     char elementName[180];
     char elementLabel[180];
-    for( int i=0; i<NUM_DISK_SPACES; ++i ) {
-      sprintf(elementName,"diskSpace%d",i);
-      strcpy(elementLabel,monitorPtr->getDriveName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->getDiskSpaceAvailable(i));
-    }      
-    for( int i=0; i<NUM_HK_TELEM_QUEUES; ++i ) {
-      sprintf(elementName,"hkLinks%d",i);
-      strcpy(elementLabel,monitorPtr->getHkQueueName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->hkLinks[i]);
-    }      
-    for( int i=0; i<NUM_PRIORITIES; ++i ) {
-      sprintf(elementName,"eventLinks%d",i);
-      strcpy(elementLabel,monitorPtr->getHkQueueName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->eventLinks[i]);
-    }         
-    for( int i=0; i<NUM_PROCESSES; ++i ) {
-      sprintf(elementName,"utime%d",i);
-      strcpy(elementLabel,monitorPtr->getProcName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->utime[i]);
-    }       
-    for( int i=0; i<NUM_PROCESSES; ++i ) {
-      sprintf(elementName,"stime%d",i);
-      strcpy(elementLabel,monitorPtr->getProcName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->stime[i]);
-    }       
-    for( int i=0; i<NUM_PROCESSES; ++i ) {
-      sprintf(elementName,"vsize%d",i);
-      strcpy(elementLabel,monitorPtr->getProcName(i));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->vsize[i]);
-    }      
     
+    sprintf(elementName,"ramDiskInodes");
+    sprintf(elementLabel,"Ramdisk Inodes");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,otherPtr->ramDiskInodes);
+
+    sprintf(elementName,"runStartTime");
+    sprintf(elementLabel,"Run Start Time");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,otherPtr->runStartTime);
+
+    sprintf(elementName,"runStartEventNumber");
+    sprintf(elementLabel,"Run Start Event");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,otherPtr->runStartEventNumber);
+
+
+    for( int i=0; i<3; ++i ) {
+      sprintf(elementName,"dirFiles%d",i);
+      strcpy(elementLabel,otherPtr->getDirName(i));      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,otherPtr->dirFiles[i]);
+    }      
+
+    for( int i=0; i<3; ++i ) {
+      sprintf(elementName,"dirLinks%d",i);
+      strcpy(elementLabel,otherPtr->getDirName(i));      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,otherPtr->dirLinks[i]);
+    }      
+
+    for(int bit=0;bit<NUM_PROCESSES;bit++) {
+      sprintf(elementName,"procBit%d",bit);
+      sprintf(elementLabel,"%s",otherPtr->getProcName(bit));
+      int value=otherPtr->isInProcessMask(bit);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);    
+    }
+
+
   }
   std::cerr << "\n";
 
@@ -161,19 +164,19 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"monitor");
+  summaryFile.writeFullJSONFiles(fullDir,"other");
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/monitorSummary.json.gz",dirName);
+  sprintf(outName,"%s/otherSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/monitorTime.json.gz",dirName);
+  sprintf(outName,"%s/otherTime.json.gz",dirName);
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastMonitor",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastOther",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);

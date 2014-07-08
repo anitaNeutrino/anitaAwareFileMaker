@@ -111,12 +111,13 @@ int main(int argc, char **argv) {
     }      
     for( int i=0; i<NUM_PRIORITIES; ++i ) {
       sprintf(elementName,"eventLinks%d",i);
-      strcpy(elementLabel,monitorPtr->getHkQueueName(i));      
+      sprintf(elementLabel,"Priority %d",i);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->eventLinks[i]);
-    }         
+    }        
+ 
     for( int i=0; i<NUM_PROCESSES; ++i ) {
       sprintf(elementName,"utime%d",i);
-      strcpy(elementLabel,monitorPtr->getProcName(i));      
+      strcpy(elementLabel,monitorPtr->getProcName(i));
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->utime[i]);
     }       
     for( int i=0; i<NUM_PROCESSES; ++i ) {

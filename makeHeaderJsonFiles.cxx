@@ -20,8 +20,8 @@
 #include "TTimeStamp.h"
 #include "TSystem.h"
 
-//AWARE Includes
-#include "AwareRunSummaryFileMaker.h"
+//AWARE Include
+#include "AnitaAwareHandler.h"
 #include "AwareRunDatabase.h"
 
 
@@ -72,14 +72,12 @@ int main(int argc, char **argv) {
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
-  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA3",60);
-
-  
-
   char instrumentName[20];
   sprintf(instrumentName,"ANITA3");
 
-
+  AnitaAwareHandler awareHandler;
+  awareHandler.startHeaderFile(runNumber,dateInt);
+  
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -88,70 +86,12 @@ int main(int argc, char **argv) {
 
     //This line gets the Header Entry
     headTree->GetEntry(event);
+    awareHandler.addHeader(hdPtr);
 
-    TTimeStamp timeStamp((time_t)hdPtr->realTime,(Int_t)0);
-    //    std::cout << "Run: "<< realEvPtr->
-
-    //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
-    //Summary file fun
-    char elementName[180];
-    char elementLabel[180];
-
-    sprintf(elementName,"ppsNum");
-    sprintf(elementLabel,"PPS Num");
-    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->ppsNum);
-
-    sprintf(elementName,"c3poNum");
-    sprintf(elementLabel,"C3P0 Num");
-    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->c3poNum);
-
-    sprintf(elementName,"eventNumber");
-    sprintf(elementLabel,"Event Number");
-    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->eventNumber);
-
-
-    for(int bit=0;bit<16;bit++) {
-      sprintf(elementName,"l3TrigBit%d",bit);
-      sprintf(elementLabel,"L3 Phi %d",bit+1);
-      int value=hdPtr->isInL3Pattern(bit);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-      
-      
-      sprintf(elementName,"upperL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Upper Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kUpperRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"lowerL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Lower Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kLowerRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"nadirL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Nadir Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kNadirRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"upperL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Upper Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kUpperRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"lowerL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Lower Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kLowerRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"nadirL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Nadir Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kNadirRing);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-      
-    }
-    
+ 
   }
   std::cerr << "\n";
-
+  awareHandler.finishHeaderFile();
 
   char outputDir[FILENAME_MAX];
   char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");
@@ -163,33 +103,7 @@ int main(int argc, char **argv) {
   }
     
 
-
-  char dirName[FILENAME_MAX];
-  char dateDirName[FILENAME_MAX];
-  char subDateDirName[FILENAME_MAX];
-  sprintf(dirName,"%s/%s/runs%d/runs%d/run%d/",outputDir,instrumentName,runNumber-runNumber%10000,runNumber-runNumber%100,runNumber);
-  sprintf(dateDirName,"%s/%s/%d/%04d/run%d/",outputDir,instrumentName,dateInt/10000,dateInt%10000,runNumber);
-  sprintf(subDateDirName,"%s/%s/%d/%04d/",outputDir,instrumentName,dateInt/10000,dateInt%10000);
-  gSystem->mkdir(dirName,kTRUE);
-  gSystem->mkdir(subDateDirName,kTRUE);
-  gSystem->Symlink(dirName,dateDirName);
-
-  std::cout << "Making: " << dirName << "\n";
-  
-
-  char fullDir[FILENAME_MAX];
-  sprintf(fullDir,"%s/full",dirName);
-  gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"header");
-
   char outName[FILENAME_MAX];
-
-  sprintf(outName,"%s/headerSummary.json.gz",dirName);
-  summaryFile.writeSummaryJSONFile(outName);
-
-
-  sprintf(outName,"%s/headerTime.json.gz",dirName);
-  summaryFile.writeTimeJSONFile(outName);
 
 
   sprintf(outName,"%s/%s/lastHeader",outputDir,instrumentName);

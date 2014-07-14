@@ -52,18 +52,57 @@ GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
 
 
 
-PROGRAM =    makePrettyHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles
+#Now the bits we're actually compiling
+ROOT_LIBRARY = libAnitaAware.${DLLSUF}
+LIB_OBJS =  AnitaAwareHandler.o
+CLASS_HEADERS =  AnitaAwareHandler.h 
 
-all : $(PROGRAM)
+
+
+PROGRAM =    $(ROOT_LIBRARY) makePrettyHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles
+
+#The library
+$(ROOT_LIBRARY) : $(LIB_OBJS) 
+	@echo "Linking $@ ..."
+ifeq ($(PLATFORM),macosx)
+# We need to make both the .dylib and the .so
+	$(LD) $(SOFLAGS) $^ $(OutPutOpt) $@
+ifeq ($(MACOSX_MINOR),4)
+	ln -sf $@ $(subst .$(DLLSUF),.so,$@)
+else
+	$(LD) -bundle -undefined $(UNDEFOPT) $(LDFLAGS) $^ \
+	 $(OutPutOpt) $(subst .$(DLLSUF),.so,$@)
+endif
+else
+	$(LD) $(SOFLAGS) $(LDFLAGS) $(LIB_OBJS) $(LIBS)  -o $@
+endif
+
+
+all : $(ROOT_LIBRARY) $(PROGRAM)
 
 
 % :  %.$(SRCSUF) 
 	@echo "<**Linking**> "  
-	$(LD)  $(CXXFLAGS) $(LDFLAGS)  $<  $(LIBS) -o $@
+	$(LD)  $(CXXFLAGS) $(LDFLAGS)  $<  $(LIBS) $(ROOT_LIBRARY) -o $@
+
+
+%.$(OBJSUF) : %.$(SRCSUF)
+	@echo "<**Compiling**> "$<
+	$(CXX) $(CXXFLAGS) -c $< -o  $@
+
+
+install: $(ROOT_LIBRARY)
+ifeq ($(PLATFORM),macosx)
+	cp $(ROOT_LIBRARY) $(subst .$(DLLSUF),.so,$(ROOT_LIBRARY)) $(ANITA_UTIL_LIB_DIR)
+else
+	cp $(ROOT_LIBRARY) $(ANITA_UTIL_LIB_DIR)
+endif
+	cp  $(CLASS_HEADERS) $(ANITA_UTIL_INC_DIR)
 
 
 clean:
 	@rm -f *Dict*
 	@rm -f *.${OBJSUF}
 	@rm -f $(PROGRAM)
+
 

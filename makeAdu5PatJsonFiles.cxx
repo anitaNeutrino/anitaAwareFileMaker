@@ -29,25 +29,31 @@ Adu5Pat *adu5PatPtr;
 
 void usage(char **argv) 
 {  
-  std::cout << "Usage\n" << argv[0] << " <input file>\n";
-  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/adu5PatFile13.root\n";  
+  std::cout << "Usage\n" << argv[0] << " <input file> <AorB>\n";
+  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/adu5PatFile13.root\t0\n";  
 }
 
 
 int main(int argc, char **argv) {
-  if(argc<2) {
+  if(argc<3) {
     usage(argv);
     return -1;
   }
 
-
+  int whichAdu5=atoi(argv[2]);
   TFile *fp = TFile::Open(argv[1]);
   if(!fp) {
     std::cerr << "Can't open file\n";
     return -1;
   }
-  TTree *adu5PatTree = (TTree*) fp->Get("adu5PatTree");
-  TTree *adu5bPatTree = (TTree*) fp->Get("adu5bPatTree");
+  TTree *adu5PatTree;
+  if(whichAdu5==0) adu5PatTree=(TTree*) fp->Get("adu5PatTree");
+  else if(whichAdu5==1) adu5PatTree = (TTree*) fp->Get("adu5bPatTree");
+  else {
+    std::cerr << "Invalid option must be 0 or 1\n";
+    return -1;
+  }
+
   if(!adu5PatTree) {
     std::cerr << "Can't find adu5PatTree\n";
     return -1;
@@ -58,9 +64,7 @@ int main(int argc, char **argv) {
     return -1;
   }
    
-  //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
   adu5PatTree->SetBranchAddress("pat",&adu5PatPtr);
-  adu5bPatTree->SetBranchAddress("pat",&adu5PatPtr);
   
   adu5PatTree->GetEntry(0);
 
@@ -87,19 +91,13 @@ int main(int argc, char **argv) {
   char adu5Letter[2]={'A','B'};
   
 
-  for(int whichAdu5=0;whichAdu5<2;whichAdu5++) {
-    if(whichAdu5==1) 
-      numEntries=adu5bPatTree->GetEntries();
-    //  numEntries=1;
-    for(Long64_t event=0;event<numEntries;event++) {
+  for(Long64_t event=0;event<numEntries;event++) {
       if(event%starEvery==0) {
 	std::cerr << "*";       
       }
-
+      
       //This line gets the Hk Entry
-      if(whichAdu5==0)
-	adu5PatTree->GetEntry(event);
-      else adu5bPatTree->GetEntry(event);
+      adu5PatTree->GetEntry(event);
 
       TTimeStamp timeStamp((time_t)adu5PatPtr->realTime,(Int_t)0);
       //    std::cout << "Run: "<< realEvPtr->
@@ -146,7 +144,7 @@ int main(int argc, char **argv) {
       
     }
     std::cerr << "\n";
-  }
+
 
   
 
@@ -181,15 +179,15 @@ int main(int argc, char **argv) {
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/adu5PatSummary.json.gz",dirName);
+  sprintf(outName,"%s/adu5%cPatSummary.json.gz",dirName,adu5Letter[whichAdu5]);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/adu5PatTime.json.gz",dirName);
+  sprintf(outName,"%s/adu5%cPatTime.json.gz",dirName,adu5Letter[whichAdu5]);
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastAdu5Pat",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastAdu5%cPat",outputDir,instrumentName,adu5Letter[whichAdu5]);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);

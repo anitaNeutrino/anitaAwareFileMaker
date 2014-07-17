@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export AWARE_OUTPUT_DIR=/storage/palestine14/aware/output/
+export AWARE_OUTPUT_DIR=/anitaStorage/palestine14/aware/output/
 

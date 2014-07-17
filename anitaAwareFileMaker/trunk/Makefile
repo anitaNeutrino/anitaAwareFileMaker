@@ -59,7 +59,7 @@ CLASS_HEADERS =  AnitaAwareHandler.h
 
 
 
-PROGRAM =    $(ROOT_LIBRARY) makePrettyHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles
+PROGRAM =     makePrettyHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles makeSurfHkJsonFiles makeAdu5PatJsonFiles
 
 #The library
 $(ROOT_LIBRARY) : $(LIB_OBJS) 
@@ -78,7 +78,7 @@ else
 endif
 
 
-all : $(ROOT_LIBRARY) $(PROGRAM)
+all :  $(ROOT_LIBRARY) $(PROGRAM) 
 
 
 % :  %.$(SRCSUF) 

@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  g12PosTree->SetBranchAddress("vtg",&g12PosPtr);
+  g12PosTree->SetBranchAddress("pos",&g12PosPtr);
   
   g12PosTree->GetEntry(0);
 

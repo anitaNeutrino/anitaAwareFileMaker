@@ -26,12 +26,13 @@
 #include "AwareRunDatabase.h"
 
 
-PrettyAnitaHk *hkPtr;
+PrettyAnitaHk *prettyPtr=0;
+CalibratedHk *hkPtr=0;
 
 void usage(char **argv) 
 {  
   std::cout << "Usage\n" << argv[0] << " <input file>\n";
-  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/prettyHkFile13.root\n";  
+  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/hkFile13.root\n";  
 }
 
 
@@ -47,21 +48,23 @@ int main(int argc, char **argv) {
     std::cerr << "Can't open file\n";
     return -1;
   }
-  TTree *prettyHkTree = (TTree*) fp->Get("prettyHkTree");
-  if(!prettyHkTree) {
-    std::cerr << "Can't find prettyHkTree\n";
-    return -1;
-  }
+   TTree *hkTree = (TTree*) fp->Get("hkTree");
+   if(!hkTree) {
+      std::cerr << "Couldn't get hkTree from " << argv[1] << "\n";
+      return -1;
+   }      
+   hkTree->SetBranchAddress("hk",&hkPtr);   
 
-  if(prettyHkTree->GetEntries()<1) {
-    std::cerr << "No entries in prettyHkTree\n";
+   
+
+  if(hkTree->GetEntries()<1) {
+    std::cerr << "No entries in hkTree\n";
     return -1;
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  prettyHkTree->SetBranchAddress("hk",&hkPtr);
   
-  prettyHkTree->GetEntry(0);
+  hkTree->GetEntry(0);
 
 
   TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
@@ -71,7 +74,7 @@ int main(int argc, char **argv) {
 
 
   //Now we set up out run list
-  Long64_t numEntries=prettyHkTree->GetEntries();
+  Long64_t numEntries=hkTree->GetEntries();
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
@@ -90,12 +93,19 @@ int main(int argc, char **argv) {
     }
 
     //This line gets the Hk Entry
-    prettyHkTree->GetEntry(event);
+    hkTree->GetEntry(event);
 
-    TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
-    //    std::cout << "Run: "<< realEvPtr->
 
-    //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
+   if(prettyPtr) delete prettyPtr;
+   prettyPtr= new PrettyAnitaHk(hkPtr,0);
+
+   //   std::cout << hkPtr->realTime << "\t" << prettyPtr->realTime << "\n";
+
+    
+    TTimeStamp timeStamp((time_t)prettyPtr->realTime,(Int_t)0);
+    //    std::cout << "Run: "<< hkPtr->run << "\n";
+
+    //    std::cout  << timeStamp.AsString("sl") << "\n";
     //Summary file fun
     char elementName[180];
     char elementLabel[180];
@@ -105,41 +115,41 @@ int main(int argc, char **argv) {
 	strcpy(elementLabel,CalibratedHk::getInternalTempName(i));      
       else 
 	strcpy(elementLabel,CalibratedHk::getSBSTempName(i-NUM_INT_TEMPS));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->intTemps[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->intTemps[i]);
     }
     for( int i=0; i<NUM_EXT_TEMPS; ++i ) {
       sprintf(elementName,"extTemps%d",i);
       strcpy(elementLabel,CalibratedHk::getExternalTempName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->extTemps[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->extTemps[i]);
     }
     for( int i=0; i<NUM_VOLTAGES; ++i ) {
       sprintf(elementName,"voltages%d",i);
       strcpy(elementLabel,CalibratedHk::getVoltageName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->voltages[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->voltages[i]);
     }
     for( int i=0; i<NUM_CURRENTS; ++i ) {
       sprintf(elementName,"currents%d",i);
       strcpy(elementLabel,CalibratedHk::getCurrentName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->currents[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->currents[i]);
     }
     const char *magNames[3] = {"Mag-X","Mag-Y","Mag-Z"};
     for( int i=0; i<3; ++i ) {
       sprintf(elementName,"magentometer%d",i);
       strcpy(elementLabel,magNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->magnetometer[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->magnetometer[i]);
     }
     const char *pressureNames[2] = {"Low-Pressure","High-Pressure"};
     for( int i=0; i<2; ++i ) {
       sprintf(elementName,"pressures%d",i);
       strcpy(elementLabel,pressureNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->pressures[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->pressures[i]);
     }
     const char *accelNames[2][4]={{"Ac1-X","Ac1-Y","Ac1-Z","Ac1-T"},{"Ac2-X","Ac2-Y","Ac2-Z","Ac2-T"}};    
     for( int i=0; i<2; ++i ) {
       for( int j=0; j<4; ++j ) {
 	sprintf(elementName,"accelerometer%d_%d",i,j);
 	strcpy(elementLabel,accelNames[i][j]);
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->accelerometer[i][j]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->accelerometer[i][j]);
       }
     }
     const char *ssMagNames[4][2]={{"SS1-X","SS1-Y"},{"SS2-X","SS2-Y"},{"SS3-X","SS3-Y"},{"SS4-X","SS4-Y"}};
@@ -148,15 +158,15 @@ int main(int argc, char **argv) {
       for( int j=0; j<2; ++j ) {
 	sprintf(elementName,"ssMag%d_%d",i,j);
 	strcpy(elementLabel,ssMagNames[i][j]);
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssMag[i][j]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssMag[i][j]);
 
       }
     }
     for( int i=0; i<4; ++i ) {
        sprintf(elementName,"ssElevation%d",i);
        strcpy(elementLabel,ssNames[i]);       
-       if(hkPtr->ssGoodFlag[i])
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssElevation[i],AwareAverageType::kDefault,kTRUE,-999);
+       if(prettyPtr->ssGoodFlag[i])
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssElevation[i],AwareAverageType::kDefault,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
        
@@ -165,21 +175,21 @@ int main(int argc, char **argv) {
        
        sprintf(elementName,"ssAzimuthRaw%d",i);
        strcpy(elementLabel,ssNames[i]);
-       if(hkPtr->ssGoodFlag[i])
-	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuth[i],AwareAverageType::kDefault,kTRUE,-999);
+       if(prettyPtr->ssGoodFlag[i])
+	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssAzimuth[i],AwareAverageType::kDefault,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
        
        sprintf(elementName,"ssAzimuthAdu5%d",i);
        strcpy(elementLabel,ssNames[i]);
-       if(hkPtr->ssGoodFlag[i])
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssAzimuthAdu5[i],AwareAverageType::kAngleDegree,kTRUE,-999);
+       if(prettyPtr->ssGoodFlag[i])
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssAzimuthAdu5[i],AwareAverageType::kAngleDegree,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kAngleDegree,kTRUE,-999);
        
        sprintf(elementName,"ssGoodFlag%d",i);
        strcpy(elementLabel,ssNames[i]);
-       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->ssGoodFlag[i]);
+       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssGoodFlag[i]);
     }       
     
   }

@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  g12SatTree->SetBranchAddress("vtg",&g12SatPtr);
+  g12SatTree->SetBranchAddress("sat",&g12SatPtr);
   
   g12SatTree->GetEntry(0);
 
@@ -105,26 +105,34 @@ int main(int argc, char **argv) {
       sprintf(elementLabel,"Num Sats");      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->numSats);
 	
-      for(int whichSat=0;whichSat<(int)g12SatPtr->numSats;whichSat++) {
+      for(int whichSat=0;whichSat<MAX_SATS;whichSat++) {
+	int goodSat=0;
+	if(whichSat<(int)g12SatPtr->numSats) goodSat=1;
+
 	sprintf(elementName,"prn_%d",whichSat+1);
 	sprintf(elementLabel,"PRN %d",whichSat+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->prn[whichSat]);
+	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->prn[whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	else summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
 	
 	sprintf(elementName,"elevation_%d",whichSat+1);
 	sprintf(elementLabel,"Elevation %d",whichSat+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->elevation[whichSat]);
+	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->elevation[whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	else summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
 	
 	sprintf(elementName,"snr_%d",whichSat+1);
 	sprintf(elementLabel,"SNR %d",whichSat+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->snr[whichSat]);
+	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->snr[whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
 		
 	sprintf(elementName,"flag_%d",whichSat+1);
 	sprintf(elementLabel,"Flag %d",whichSat+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->flag[whichSat]);
+	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->flag[whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	else summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
 	
 	sprintf(elementName,"azimuth_%d",whichSat+1);
 	sprintf(elementLabel,"Azimuth %d",whichSat+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->azimuth[whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->azimuth[whichSat],AwareAverageType::kAngleDegree,kTRUE,-999);
+	else summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kAngleDegree,kTRUE,-999);
       }	  
       
     }

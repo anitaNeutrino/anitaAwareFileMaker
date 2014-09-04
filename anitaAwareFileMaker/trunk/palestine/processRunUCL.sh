@@ -10,13 +10,24 @@ fi
 RUN=$1
 BASE_DIR=/unix/anita2/palestine14
 RAW_RUN_DIR=${BASE_DIR}/raw/run${RUN}
+RAW_CONFIG_DIR=${RAW_RUN_DIR}/config
 EVENT_BASE_DIR=${BASE_DIR}/root
 ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
+
+source /home/rjn/anita/anitaAwareFileMaker/setupAwareVariablesUCL.sh
+
+for configFile in ${RAW_CONFIG_DIR}/*.config; do
+    filename=$(basename "$configFile")
+    extension="${filename##*.}"
+    filename="${filename%.*}"
+    echo $filename $extension
+done
+
+exit 1
 
 
 #Step 2: Generate the AWARE Files
 cd /home/rjn/anita/anitaAwareFileMaker/
-source setupAwareVariablesUCL.sh
 if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
     ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/prettyHkFile${RUN}.root    
@@ -25,3 +36,5 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeOtherMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root    
 #    ./makeEventJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root ${ROOT_RUN_DIR}/eventFile${RUN}.root  &
 fi
+
+

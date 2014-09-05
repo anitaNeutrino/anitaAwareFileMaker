@@ -15,19 +15,17 @@ EVENT_BASE_DIR=${BASE_DIR}/root
 ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 
 source /home/rjn/anita/anitaAwareFileMaker/setupAwareVariablesUCL.sh
+cd /home/rjn/anita/anitaAwareFileMaker/
 
 for configFile in ${RAW_CONFIG_DIR}/*.config; do
-    filename=$(basename "$configFile")
-    extension="${filename##*.}"
-    filename="${filename%.*}"
-    echo $filename $extension
+    python ./processConfig.py -i $configFile -r $RUN
 done
 
 exit 1
 
 
 #Step 2: Generate the AWARE Files
-cd /home/rjn/anita/anitaAwareFileMaker/
+
 if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
     ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/prettyHkFile${RUN}.root    

@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
 	sprintf(elementName,"rfPower%d_%d",surf,chan);
 	sprintf(elementLabel,"Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->rfPower[surf][chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->rfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
       }      
     }
 

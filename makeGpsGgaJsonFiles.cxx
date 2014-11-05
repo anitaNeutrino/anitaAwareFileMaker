@@ -176,7 +176,12 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"gpsGga");
+
+
+
+  char tagName[180];
+  sprintf(tagName,"%sGga",gpsName[whichGps]); 
+  summaryFile.writeFullJSONFiles(fullDir,tagName);
 
   char outName[FILENAME_MAX];
 

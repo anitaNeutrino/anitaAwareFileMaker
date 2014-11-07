@@ -11,7 +11,7 @@
 #include <iostream>
 
 //ANITA EventReaderRoot Includes
-#include "SurfHk.h"
+#include "AvgSurfHk.h"
 
 //ROOT Includes
 #include "TTree.h"
@@ -25,12 +25,12 @@
 #include "AwareRunDatabase.h"
 
 
-SurfHk *surfHkPtr;
+AvgSurfHk *avgSurfHkPtr;
 
 void usage(char **argv) 
 {  
   std::cout << "Usage\n" << argv[0] << " <input file>\n";
-  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/surfHkFile13.root\n";  
+  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/avgSurfHkFile13.root\n";  
 }
 
 
@@ -46,31 +46,32 @@ int main(int argc, char **argv) {
     std::cerr << "Can't open file\n";
     return -1;
   }
-  TTree *surfHkTree = (TTree*) fp->Get("surfHkTree");
-  if(!surfHkTree) {
-    std::cerr << "Can't find surfHkTree\n";
+  TTree *avgSurfHkTree = (TTree*) fp->Get("avgSurfHkTree");
+  if(!avgSurfHkTree) {
+    std::cerr << "Can't find avgSurfHkTree\n";
     return -1;
   }
 
-  if(surfHkTree->GetEntries()<1) {
-    std::cerr << "No entries in surfHkTree\n";
+  if(avgSurfHkTree->GetEntries()<1) {
+    std::cerr << "No entries in avgSurfHkTree\n";
     return -1;
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  surfHkTree->SetBranchAddress("surf",&surfHkPtr);
+  avgSurfHkTree->SetBranchAddress("surf",&avgSurfHkPtr);
   
-  surfHkTree->GetEntry(0);
+  avgSurfHkTree->GetEntry(0);
 
 
-  TTimeStamp timeStamp((time_t)surfHkPtr->realTime,(Int_t)0);
+  TTimeStamp timeStamp((time_t)avgSurfHkPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t firstTime=timeStamp.GetSec();
-  UInt_t runNumber=surfHkPtr->run;
+  UInt_t lastTime=timeStamp.GetSec();
+  UInt_t runNumber=avgSurfHkPtr->run;
 
 
   //Now we set up out run list
-  Long64_t numEntries=surfHkTree->GetEntries();
+  Long64_t numEntries=avgSurfHkTree->GetEntries();
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
@@ -89,9 +90,10 @@ int main(int argc, char **argv) {
     }
 
     //This line gets the Hk Entry
-    surfHkTree->GetEntry(event);
+    avgSurfHkTree->GetEntry(event);
 
-    TTimeStamp timeStamp((time_t)surfHkPtr->realTime,(Int_t)0);
+    TTimeStamp timeStamp((time_t)avgSurfHkPtr->realTime,(Int_t)0);
+    if(avgSurfHkPtr->realTime>lastTime) lastTime=avgSurfHkPtr->realTime;
     //    std::cout << "Run: "<< realEvPtr->
 
     //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
@@ -102,15 +104,30 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	sprintf(elementName,"scaler%d_%d",surf,chan);
 	sprintf(elementLabel,"Scaler %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgScaler[surf][chan]);
+      }      
+    }
+
+    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+      for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	sprintf(elementName,"rmsScaler%d_%d",surf,chan);
+	sprintf(elementLabel,"RMS Scaler %d-%d",surf+1,chan+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsScaler[surf][chan]);
+      }      
+    }
+    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+      for( int chan=0; chan<4; ++chan ) {
+	sprintf(elementName,"l1%d_%d",surf,chan);
+	sprintf(elementLabel,"L1 %d-%d",surf+1,chan+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgL1[surf][chan]);
       }      
     }
 
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<4; ++chan ) {
-	sprintf(elementName,"l1Scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"L1 Scaler %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][chan]);
+	sprintf(elementName,"rmsL1%d_%d",surf,chan);
+	sprintf(elementLabel,"RMS L1 %d-%d",surf+1,chan+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsL1[surf][chan]);
       }      
     }
 
@@ -118,7 +135,15 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	sprintf(elementName,"threshold%d_%d",surf,chan);
 	sprintf(elementLabel,"Threshold %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgThreshold[surf][chan]);
+      }      
+    }
+
+    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+      for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	sprintf(elementName,"rmsThreshold%d_%d",surf,chan);
+	sprintf(elementLabel,"RMS Threshold %d-%d",surf+1,chan+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsThreshold[surf][chan]);
       }      
     }
 
@@ -126,7 +151,14 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
 	sprintf(elementName,"rfPower%d_%d",surf,chan);
 	sprintf(elementLabel,"Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->rfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgRfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+      }      
+    }
+    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+      for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
+	sprintf(elementName,"rmsRfPower%d_%d",surf,chan);
+	sprintf(elementLabel,"RMS Rf Power %d-%d",surf+1,chan+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsRfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
       }      
     }
 
@@ -161,20 +193,20 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"surfHk");
+  summaryFile.writeFullJSONFiles(fullDir,"avgSurfHk");
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/surfHkSummary.json.gz",dirName);
+  sprintf(outName,"%s/avgSurfHkSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/surfHkTime.json.gz",dirName);
+  sprintf(outName,"%s/avgSurfHkTime.json.gz",dirName);
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastSurfHk",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  sprintf(outName,"%s/%s/lastAvgSurfHk",outputDir,instrumentName);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
 

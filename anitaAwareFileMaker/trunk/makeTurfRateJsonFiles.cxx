@@ -11,7 +11,7 @@
 #include <iostream>
 
 //ANITA EventReaderRoot Includes
-#include "SurfHk.h"
+#include "TurfRate.h"
 
 //ROOT Includes
 #include "TTree.h"
@@ -25,12 +25,12 @@
 #include "AwareRunDatabase.h"
 
 
-SurfHk *surfHkPtr;
+TurfRate *turfRatePtr;
 
 void usage(char **argv) 
 {  
   std::cout << "Usage\n" << argv[0] << " <input file>\n";
-  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/surfHkFile13.root\n";  
+  std::cout << "e.g.\n" << argv[0] << " http://www.hep.ucl.ac.uk/uhen/anita/private/anitaIIData/flight0809/root/run13/turfRateFile13.root\n";  
 }
 
 
@@ -46,31 +46,31 @@ int main(int argc, char **argv) {
     std::cerr << "Can't open file\n";
     return -1;
   }
-  TTree *surfHkTree = (TTree*) fp->Get("surfHkTree");
-  if(!surfHkTree) {
-    std::cerr << "Can't find surfHkTree\n";
+  TTree *turfRateTree = (TTree*) fp->Get("turfRateTree");
+  if(!turfRateTree) {
+    std::cerr << "Can't find turfRateTree\n";
     return -1;
   }
 
-  if(surfHkTree->GetEntries()<1) {
-    std::cerr << "No entries in surfHkTree\n";
+  if(turfRateTree->GetEntries()<1) {
+    std::cerr << "No entries in turfRateTree\n";
     return -1;
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  surfHkTree->SetBranchAddress("surf",&surfHkPtr);
+  turfRateTree->SetBranchAddress("surf",&turfRatePtr);
   
-  surfHkTree->GetEntry(0);
+  turfRateTree->GetEntry(0);
 
 
-  TTimeStamp timeStamp((time_t)surfHkPtr->realTime,(Int_t)0);
+  TTimeStamp timeStamp((time_t)turfRatePtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t firstTime=timeStamp.GetSec();
-  UInt_t runNumber=surfHkPtr->run;
+  UInt_t runNumber=turfRatePtr->run;
 
 
   //Now we set up out run list
-  Long64_t numEntries=surfHkTree->GetEntries();
+  Long64_t numEntries=turfRateTree->GetEntries();
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
@@ -82,6 +82,8 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA3");
 
 
+  char *polString[2]={'V','H'};
+
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -89,46 +91,60 @@ int main(int argc, char **argv) {
     }
 
     //This line gets the Hk Entry
-    surfHkTree->GetEntry(event);
+    turfRateTree->GetEntry(event);
 
-    TTimeStamp timeStamp((time_t)surfHkPtr->realTime,(Int_t)0);
+    TTimeStamp timeStamp((time_t)turfRatePtr->realTime,(Int_t)0);
     //    std::cout << "Run: "<< realEvPtr->
 
     //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
     //Summary file fun
     char elementName[180];
     char elementLabel[180];
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
-      for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
-	sprintf(elementName,"scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"Scaler %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
+
+
+    sprintf(elementName,"deadTime");
+    sprintf(elementLabel,"Dead Time");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->getDeadTimeFrac());
+
+
+    sprintf(elementName,"ppsNum");
+    sprintf(elementLabel,"PPS Num");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->ppsNum);
+
+
+    for( int phi=0; phi<PHI_SECTORS; ++phi ) {
+      for( int pol=0; pol<2; ++pol ) {
+	sprintf(elementName,"l1Rates%d_%c",phi,polString[pol]);
+	sprintf(elementLabel,"L1 Rates %d-%c",phi+1,polString[pol]);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l1Rates[phi][pol]);
       }      
     }
 
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
-      for( int chan=0; chan<4; ++chan ) {
-	sprintf(elementName,"l1Scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"L1 Scaler %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][chan]);
-      }      
+    for( int phi=0; phi<PHI_SECTORS; ++phi ) {
+      int pol=0;
+      sprintf(elementName,"l3Rates%d_%c",phi,polString[pol]);
+      sprintf(elementLabel,"L3 Rates %d-%c",phi+1,polString[pol]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l3Rates[phi]);
+      pol=1;
+      sprintf(elementName,"l3Rates%d_%c",phi,polString[pol]);
+      sprintf(elementLabel,"L3 Rates %d-%c",phi+1,polString[pol]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l3RatesH[phi]);
+         
     }
 
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
-      for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
-	sprintf(elementName,"threshold%d_%d",surf,chan);
-	sprintf(elementLabel,"Threshold %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
-      }      
-    }
 
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
-      for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
-	sprintf(elementName,"rfPower%d_%d",surf,chan);
-	sprintf(elementLabel,"Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->rfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
-      }      
-    }
+   for(int bit=0;bit<16;bit++) {
+      sprintf(elementName,"phiTrigMask%d",bit);
+      sprintf(elementLabel,"Phi Mask VPol %d",bit+1);
+      int value=turfRatePtr->isPhiMasked(bit);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"phiTrigMaskH%d",bit);
+      sprintf(elementLabel,"Phi Mask HPol %d",bit+1);
+      int value=turfRatePtr->isPhiMaskedHPol(bit);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+   }
+
 
   }
   std::cerr << "\n";
@@ -161,19 +177,19 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"surfHk");
+  summaryFile.writeFullJSONFiles(fullDir,"turfRate");
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/surfHkSummary.json.gz",dirName);
+  sprintf(outName,"%s/turfRateSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/surfHkTime.json.gz",dirName);
+  sprintf(outName,"%s/turfRateTime.json.gz",dirName);
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastSurfHk",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastTurfRate",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);

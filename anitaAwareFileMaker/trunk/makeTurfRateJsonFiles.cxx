@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////  makeSurfHkJsonFiles
-////      This is a simple program that converts ANITA Surf hk root files 
+////  makeTurfHkJsonFiles
+////      This is a simple program that converts ANITA Turf hk root files 
 ////      into JSON files that can be read by the AWARE web plotter code
 ////
 ////    June 2014,  r.nichol@ucl.ac.uk 
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  turfRateTree->SetBranchAddress("surf",&turfRatePtr);
+  turfRateTree->SetBranchAddress("turf",&turfRatePtr);
   
   turfRateTree->GetEntry(0);
 
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA3");
 
 
-  char *polString[2]={'V','H'};
+  char polString[2]={'V','H'};
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 
       sprintf(elementName,"phiTrigMaskH%d",bit);
       sprintf(elementLabel,"Phi Mask HPol %d",bit+1);
-      int value=turfRatePtr->isPhiMaskedHPol(bit);
+      value=turfRatePtr->isPhiMaskedHPol(bit);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
    }
 

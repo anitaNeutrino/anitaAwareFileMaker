@@ -11,7 +11,7 @@
 #include <iostream>
 
 //ANITA EventReaderRoot Includes
-#include "AvgSurfHk.h"
+#include "AveragedSurfHk.h"
 
 //ROOT Includes
 #include "TTree.h"
@@ -25,7 +25,7 @@
 #include "AwareRunDatabase.h"
 
 
-AvgSurfHk *avgSurfHkPtr;
+AveragedSurfHk *avgSurfHkPtr;
 
 void usage(char **argv) 
 {  
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  avgSurfHkTree->SetBranchAddress("surf",&avgSurfHkPtr);
+  avgSurfHkTree->SetBranchAddress("avgsurf",&avgSurfHkPtr);
   
   avgSurfHkTree->GetEntry(0);
 
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	sprintf(elementName,"threshold%d_%d",surf,chan);
 	sprintf(elementLabel,"Threshold %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgThreshold[surf][chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgThresh[surf][chan]);
       }      
     }
 
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	sprintf(elementName,"rmsThreshold%d_%d",surf,chan);
 	sprintf(elementLabel,"RMS Threshold %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsThreshold[surf][chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsThresh[surf][chan]);
       }      
     }
 
@@ -151,14 +151,14 @@ int main(int argc, char **argv) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
 	sprintf(elementName,"rfPower%d_%d",surf,chan);
 	sprintf(elementLabel,"Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgRfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgRFPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
       }      
     }
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
 	sprintf(elementName,"rmsRfPower%d_%d",surf,chan);
 	sprintf(elementLabel,"RMS Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsRfPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsRFPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
       }      
     }
 

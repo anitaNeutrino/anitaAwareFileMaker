@@ -50,43 +50,59 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
    sprintf(elementLabel,"Event Number");
    fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->eventNumber);
 
+   sprintf(elementName,"triggerTimeNs");
+   sprintf(elementLabel,"Trigger Time");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->triggerTimeNs);
+
+   sprintf(elementName,"priority");
+   sprintf(elementLabel,"Priority");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->priority&0xf);
+
+   sprintf(elementName,"bufferDepth");
+   sprintf(elementLabel,"Buffer Depth");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->bufferDepth);
+
+
+   for(int bit=0;bit<4;bit++) {
+     const char *trigLabels[4]={"RF","ADU5","G12","Soft"};
+      sprintf(elementName,"trigtype%d",bit);
+      sprintf(elementLabel,"%s",trigLabels[bit]);
+      int value=(hdPtr->trigType&(1<<bit)?1:0);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+   }
    
    for(int bit=0;bit<16;bit++) {
-      sprintf(elementName,"l3TrigBit%d",bit);
-      sprintf(elementLabel,"L3 Phi %d",bit+1);
-      int value=hdPtr->isInL3Pattern(bit);
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
-      
-      
-      sprintf(elementName,"upperL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Upper Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kUpperRing);
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
-      
-      sprintf(elementName,"lowerL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Lower Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kLowerRing);
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
-      
-      sprintf(elementName,"nadirL2TrigBit%d",bit);
-      sprintf(elementLabel,"L2 Nadir Phi %d",bit+1);
-      value=hdPtr->isInL2Pattern(bit,AnitaRing::kNadirRing);
+      sprintf(elementName,"l3TrigBitV%d",bit);
+      sprintf(elementLabel,"L3 V-Pol %d",bit+1);
+      int value=hdPtr->isInL3Pattern(bit,AnitaPol::kVertical);
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"upperL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Upper Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kUpperRing);
+      sprintf(elementName,"l3TrigBitH%d",bit);
+      sprintf(elementLabel,"L3 H-Pol %d",bit+1);
+      value=hdPtr->isInL3Pattern(bit,AnitaPol::kHorizontal);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+      
+      
+      sprintf(elementName,"L1TrigMaskV%d",bit);
+      sprintf(elementLabel,"L1 V-Pol %d",bit+1);
+      value=hdPtr->isInL1Mask(bit,AnitaPol::kVertical);
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"lowerL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Lower Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kLowerRing);
+      sprintf(elementName,"L1TrigMaskH%d",bit);
+      sprintf(elementLabel,"L1 H-Pol %d",bit+1);
+      value=hdPtr->isInL1Mask(bit,AnitaPol::kHorizontal);
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"nadirL1TrigBit%d",bit);
-      sprintf(elementLabel,"L1 Nadir Phi %d",bit+1);
-      value=hdPtr->isInL1Pattern(bit,AnitaRing::kNadirRing);
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);      
+      sprintf(elementName,"PhiTrigMaskV%d",bit);
+      sprintf(elementLabel,"Phi V-Pol %d",bit+1);
+      value=hdPtr->isInPhiMask(bit,AnitaPol::kVertical);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"PhiTrigMaskH%d",bit);
+      sprintf(elementLabel,"Phi H-Pol %d",bit+1);
+      value=hdPtr->isInPhiMask(bit,AnitaPol::kHorizontal);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+
    }
    
 }

@@ -132,6 +132,11 @@ int main(int argc, char **argv) {
       strcpy(elementLabel,CalibratedHk::getCurrentName(i));
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->currents[i]);
     }
+    for( int i=0; i<NUM_POWERS; ++i ) {
+      sprintf(elementName,"powers%d",i);
+      strcpy(elementLabel,CalibratedHk::getPowerName(i));
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getPower(i));
+    }
     const char *magNames[3] = {"Mag-X","Mag-Y","Mag-Z"};
     for( int i=0; i<3; ++i ) {
       sprintf(elementName,"magentometer%d",i);

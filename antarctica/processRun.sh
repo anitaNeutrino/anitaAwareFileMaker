@@ -10,6 +10,7 @@ fi
 RUN=$1
 BASE_DIR=/anitaStorage/antarctica14
 RAW_RUN_DIR=${BASE_DIR}/raw/run${RUN}
+RAW_CONFIG_DIR=${RAW_RUN_DIR}/config
 EVENT_BASE_DIR=${BASE_DIR}/root
 ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 
@@ -22,16 +23,46 @@ then
     ./runAnitaIIIFileMaker.sh $RUN
 fi
 
-#Step 2: Generate the AWARE Files
+
 cd /home/radio/anita14/anitaAwareFileMaker/
 source setupAwareVariables.sh
+export PYTHONPATH=/home/radio/anita14/aware/python/
+
+#Step 2: Deal with the config files
+for configFile in ${RAW_CONFIG_DIR}/*.config; do
+    python ./processConfig.py -i $configFile -r $RUN
+done
+
+
+#Step 2: Generate the AWARE Files
+
 if [ -d "$ROOT_RUN_DIR" ]; then
+    echo "Header"
+    echo "=========================================="
     ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
+    echo "Hk"
+    echo "=========================================="
     ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/hkFile${RUN}.root  
-    ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root    
+    echo "SURF Hk"
+    echo "=========================================="
+    ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root
+    echo "Avg. SURF Hk"
+    echo "=========================================="
+    ./makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
+    echo "TURF Rate"
+    echo "=========================================="
+    ./makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
+    echo "Acqd"
+    echo "=========================================="
     ./makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     
+    echo "Monitor"
+    echo "=========================================="
     ./makeMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root     
+    echo "Other"
+    echo "=========================================="
     ./makeOtherMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root 
+    echo "GPS"
+    echo "=========================================="
     ./makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
     ./makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
     ./makeAdu5SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0

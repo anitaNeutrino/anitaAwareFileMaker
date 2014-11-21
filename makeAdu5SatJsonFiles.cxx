@@ -103,32 +103,32 @@ int main(int argc, char **argv) {
       //Summary file fun
       char elementName[180];
       char elementLabel[180];
-      for(int andInd=0;andInd<4;andInd++) {
-	sprintf(elementName,"numSats_%c",adu5Letter[whichAdu5]);
-	sprintf(elementLabel,"Num Sats %c",adu5Letter[whichAdu5]);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->numSats[andInd]);
+      for(int antInd=0;antInd<4;antInd++) {
+	sprintf(elementName,"numSats_%c_%d",adu5Letter[whichAdu5],antInd);
+	sprintf(elementLabel,"Num Sats %c-%d",adu5Letter[whichAdu5],antInd);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->numSats[antInd]);
 	
 	for(int whichSat=0;whichSat<(int)adu5SatPtr->numSats[whichSat];whichSat++) {
-	  sprintf(elementName,"prn_%c_%d",adu5Letter[whichAdu5],whichSat+1);
-	  sprintf(elementLabel,"PRN %c %d",adu5Letter[whichAdu5],whichSat+1);      
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->prn[andInd][whichSat]);
+	  sprintf(elementName,"prn_%c_%d_%d",adu5Letter[whichAdu5],whichSat+1,antInd);
+	  sprintf(elementLabel,"PRN %c %d %d",adu5Letter[whichAdu5],whichSat+1,antInd);      
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->prn[antInd][whichSat]);
 
-	  sprintf(elementName,"elevation_%c_%d",adu5Letter[whichAdu5],whichSat+1);
-	  sprintf(elementLabel,"Elevation %c %d",adu5Letter[whichAdu5],whichSat+1);      
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->elevation[andInd][whichSat]);
+	  sprintf(elementName,"elevation_%c_%d %d",adu5Letter[whichAdu5],whichSat+1,antInd);
+	  sprintf(elementLabel,"Elevation %c %d %d",adu5Letter[whichAdu5],whichSat+1,antInd);      
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->elevation[antInd][whichSat]);
 
-	  sprintf(elementName,"snr_%c_%d",adu5Letter[whichAdu5],whichSat+1);
-	  sprintf(elementLabel,"SNR %c %d",adu5Letter[whichAdu5],whichSat+1);      
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->snr[andInd][whichSat]);
+	  sprintf(elementName,"snr_%c_%d %d",adu5Letter[whichAdu5],whichSat+1,antInd);
+	  sprintf(elementLabel,"SNR %c %d %d",adu5Letter[whichAdu5],whichSat+1,antInd);      
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->snr[antInd][whichSat]);
 
 
-	  sprintf(elementName,"flag_%c_%d",adu5Letter[whichAdu5],whichSat+1);
-	  sprintf(elementLabel,"Flag %c %d",adu5Letter[whichAdu5],whichSat+1);      
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->flag[andInd][whichSat]);
+	  sprintf(elementName,"flag_%c_%d %d",adu5Letter[whichAdu5],whichSat+1,antInd);
+	  sprintf(elementLabel,"Flag %c %d %d",adu5Letter[whichAdu5],whichSat+1,antInd);      
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->flag[antInd][whichSat]);
 
-	  sprintf(elementName,"azimuth_%c_%d",adu5Letter[whichAdu5],whichSat+1);
-	  sprintf(elementLabel,"Azimuth %c %d",adu5Letter[whichAdu5],whichSat+1);      
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->azimuth[andInd][whichSat],AwareAverageType::kDefault,kTRUE,-999);
+	  sprintf(elementName,"azimuth_%c_%d %d",adu5Letter[whichAdu5],whichSat+1,antInd);
+	  sprintf(elementLabel,"Azimuth %c %d %d",adu5Letter[whichAdu5],whichSat+1,antInd);      
+	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5SatPtr->azimuth[antInd][whichSat],AwareAverageType::kDefault,kTRUE,-999);
 	}	  
       }	
   }

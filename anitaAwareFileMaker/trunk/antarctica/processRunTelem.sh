@@ -22,7 +22,8 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
     echo "Hk"
     echo "=========================================="
-    ./makePrettyHkJsonFiles ${ROOT_RUN_DIR}/hkFile${RUN}.root  
+    ./makeHkJsonFiles ${ROOT_RUN_DIR}/hkFile${RUN}.root  
+    ./makeSSHkJsonFiles ${ROOT_RUN_DIR}/sshkFile${RUN}.root  
     echo "SURF Hk"
     echo "=========================================="
     ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root

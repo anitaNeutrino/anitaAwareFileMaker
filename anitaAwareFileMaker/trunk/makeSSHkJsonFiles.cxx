@@ -103,9 +103,16 @@ int main(int argc, char **argv) {
     //Summary file fun
     char elementName[180];
     char elementLabel[180];
-    const char *ssMagNames[4][2]={{"SS1-X","SS1-Y"},{"SS2-X","SS2-Y"},{"SS3-X","SS3-Y"},{"SS4-X","SS4-Y"}};
     const char *ssNames[4]={"SS1B","SS2B","SS3B","SS4B"};
+
+    const char *rawSSNames[5]={"x1","x2","y1","y2","T"};
     for( int i=0; i<4; ++i ) {
+      for(int j=0;j<5;j++) {
+        sprintf(elementName,"rawSS_%d_%d",i,j);
+        sprintf(elementLabel,"%s - %s",ssNames[i],rawSSNames[j]);
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getRawSunsensor(i,j));
+      } 
+
       Float_t mag=0;
       Float_t magX=0;
       Float_t magY=0;
@@ -123,13 +130,13 @@ int main(int argc, char **argv) {
       Float_t temp=hkPtr->getSSTemp(i);
       sprintf(elementName,"ssTemp_%d",i);
       sprintf(elementLabel,"ssTemp %s",ssNames[i]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,mag);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,temp);
 
       Float_t ssPos[3]={0};
       Float_t ssAzimuth=0;
       Float_t ssElevation=0;
       Float_t ssRelElevation=0;
-      Int_t goodFlag=hkPtr->getFancySS(0,pos,&ssAzimuth,&ssElevation,&ssRelElevation);
+      Int_t goodFlag=hkPtr->getFancySS(0,ssPos,&ssAzimuth,&ssElevation,&ssRelElevation);
 
       sprintf(elementName,"ssElevation%d",i);
       strcpy(elementLabel,ssNames[i]);       

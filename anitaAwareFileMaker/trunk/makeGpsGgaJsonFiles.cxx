@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   }
   TTree *gpsGgaTree;
   if(whichGps==0) gpsGgaTree=(TTree*) fp->Get("adu5GgaTree");
-  else if(whichGps==1) gpsGgaTree = (TTree*) fp->Get("aud5bGgaTree");
+  else if(whichGps==1) gpsGgaTree = (TTree*) fp->Get("adu5bGgaTree");
   else if(whichGps==2) gpsGgaTree = (TTree*) fp->Get("g12GgaTree");
   else {
     std::cerr << "Invalid option must be 0 or 1 or 2\n";
@@ -89,8 +89,9 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA3");
 
 
-  const char *gpsName[3]={"Adu5A","Adu5B","G12"};
-  
+  const char *gpsName[3]={"adu5A","adu5B","g12"};
+  const char *gpsTitle[3]={"ADU5A","ADU5B","G12"};
+
 
   for(Long64_t event=0;event<numEntries;event++) {
       if(event%starEvery==0) {
@@ -108,39 +109,39 @@ int main(int argc, char **argv) {
       char elementName[180];
       char elementLabel[180];
       sprintf(elementName,"numSats_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Num Sats %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Num Sats %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->numSats);
       
       sprintf(elementName,"latitude_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Latitude %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Latitude %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->latitude,AwareAverageType::kDefault,kTRUE,-999);
       
       sprintf(elementName,"longitude_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Longitude %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Longitude %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->longitude,AwareAverageType::kDefault,kTRUE,-999);
       
       sprintf(elementName,"altitude_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Altitude %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Altitude %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->altitude);
       
       sprintf(elementName,"hdop_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"HDOP %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"HDOP %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->hdop);
       
       sprintf(elementName,"geoidSeparation_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Geoid Separation %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Geoid Separation %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->geoidSeparation);
       
       sprintf(elementName,"ageOfCalc_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Age of Calc. %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Age of Calc. %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->ageOfCalc);
       
       sprintf(elementName,"posFixType_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Pos. Fix Type %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Pos. Fix Type %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->posFixType);
       
       sprintf(elementName,"baseStationId_%s",gpsName[whichGps]);
-      sprintf(elementLabel,"Base Station Id %s",gpsName[whichGps]);      
+      sprintf(elementLabel,"Base Station Id %s",gpsTitle[whichGps]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,gpsGgaPtr->baseStationId);      
       
     }

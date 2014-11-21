@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////  makeTurfHkJsonFiles
-////      This is a simple program that converts ANITA Turf hk root files 
+////  makeTurfRateJsonFiles
+////      This is a simple program that converts ANITA Turf Rate root files 
 ////      into JSON files that can be read by the AWARE web plotter code
 ////
 ////    June 2014,  r.nichol@ucl.ac.uk 

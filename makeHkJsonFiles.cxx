@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-////  makePrettyHkJsonFiles
-////      This is a simple program that converts ANITA Pretty hk root files 
+////  makeHkJsonFiles
+////      This is a simple program that converts ANITA hk root files 
 ////      into JSON files that can be read by the AWARE web plotter code
 ////
 ////    June 2014,  r.nichol@ucl.ac.uk 
@@ -11,7 +11,6 @@
 #include <iostream>
 
 //ANITA EventReaderRoot Includes
-#include "PrettyAnitaHk.h"
 #include "CalibratedHk.h"
 
 //ROOT Includes
@@ -25,8 +24,6 @@
 #include "AwareRunSummaryFileMaker.h"
 #include "AwareRunDatabase.h"
 
-
-PrettyAnitaHk *prettyPtr=0;
 CalibratedHk *hkPtr=0;
 
 void usage(char **argv) 
@@ -96,13 +93,10 @@ int main(int argc, char **argv) {
     hkTree->GetEntry(event);
 
 
-   if(prettyPtr) delete prettyPtr;
-   prettyPtr= new PrettyAnitaHk(hkPtr,0);
-
    //   std::cout << hkPtr->realTime << "\t" << prettyPtr->realTime << "\n";
 
     
-    TTimeStamp timeStamp((time_t)prettyPtr->realTime,(Int_t)0);
+    TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
     //    std::cout << "Run: "<< hkPtr->run << "\n";
 
     //    std::cout  << timeStamp.AsString("sl") << "\n";
@@ -115,86 +109,113 @@ int main(int argc, char **argv) {
 	strcpy(elementLabel,CalibratedHk::getInternalTempName(i));      
       else 
 	strcpy(elementLabel,CalibratedHk::getSBSTempName(i-NUM_INT_TEMPS));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->intTemps[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getInternalTemp(i));
     }
     for( int i=0; i<NUM_EXT_TEMPS; ++i ) {
       sprintf(elementName,"extTemps%d",i);
       strcpy(elementLabel,CalibratedHk::getExternalTempName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->extTemps[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getExternalTemp(i));
     }
     for( int i=0; i<NUM_VOLTAGES; ++i ) {
       sprintf(elementName,"voltages%d",i);
       strcpy(elementLabel,CalibratedHk::getVoltageName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->voltages[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getVoltage());
     }
     for( int i=0; i<NUM_CURRENTS; ++i ) {
       sprintf(elementName,"currents%d",i);
       strcpy(elementLabel,CalibratedHk::getCurrentName(i));
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->currents[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getCurrent());
     }
     for( int i=0; i<NUM_POWERS; ++i ) {
       sprintf(elementName,"powers%d",i);
       strcpy(elementLabel,CalibratedHk::getPowerName(i));
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getPower(i));
     }
-    const char *magNames[3] = {"Mag-X","Mag-Y","Mag-Z"};
-    for( int i=0; i<3; ++i ) {
-      sprintf(elementName,"magentometer%d",i);
-      strcpy(elementLabel,magNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->magnetometer[i]);
-    }
+    
+    sprintf(elementName,"magx",i);
+    strcpy(elementLabel,"Mag-X");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->magX);
+    sprintf(elementName,"magy",i);
+    strcpy(elementLabel,"Mag-Y");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->magY);
+    sprintf(elementName,"magz",i);
+    strcpy(elementLabel,"Mag-Z");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->magZ);
+
     const char *pressureNames[2] = {"Low-Pressure","High-Pressure"};
     for( int i=0; i<2; ++i ) {
       sprintf(elementName,"pressures%d",i);
       strcpy(elementLabel,pressureNames[i]);
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->pressures[i]);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getPressure(i));
     }
     const char *accelNames[2][4]={{"Ac1-X","Ac1-Y","Ac1-Z","Ac1-T"},{"Ac2-X","Ac2-Y","Ac2-Z","Ac2-T"}};    
     for( int i=0; i<2; ++i ) {
       for( int j=0; j<4; ++j ) {
 	sprintf(elementName,"accelerometer%d_%d",i,j);
 	strcpy(elementLabel,accelNames[i][j]);
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->accelerometer[i][j]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getAccelerometer(i,j));
       }
     }
-    const char *ssMagNames[4][2]={{"SS1-X","SS1-Y"},{"SS2-X","SS2-Y"},{"SS3-X","SS3-Y"},{"SS4-X","SS4-Y"}};
-    const char *ssNames[4]={"SS1","SS2","SS3","SS4"};
-    for( int i=0; i<4; ++i ) {
-      for( int j=0; j<2; ++j ) {
-	sprintf(elementName,"ssMag%d_%d",i,j);
-	strcpy(elementLabel,ssMagNames[i][j]);
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssMag[i][j]);
 
-      }
-    }
+
+
+
+
+    char elementName[180];
+    char elementLabel[180];
+    const char *ssMagNames[4][2]={{"SS1-X","SS1-Y"},{"SS2-X","SS2-Y"},{"SS3-X","SS3-Y"},{"SS4-X","SS4-Y"}};
+    const char *ssNames[4]={"SS1A","SS2A","SS3A","SS4A"};
     for( int i=0; i<4; ++i ) {
-       sprintf(elementName,"ssElevation%d",i);
-       strcpy(elementLabel,ssNames[i]);       
-       if(prettyPtr->ssGoodFlag[i])
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssElevation[i],AwareAverageType::kDefault,kTRUE,-999);
+      Float_t mag=0;
+      Float_t magX=0;
+      Float_t magY=0;
+      hkPtr->getSSMagnitude(0,&mag,&magX,&magY);
+      sprintf(elementName,"ssMag_%d",i);
+      sprintf(elementLabel,"ssMag %s",ssNames[i]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,mag);
+      sprintf(elementName,"ssMagX_%d",i);
+      sprintf(elementLabel,"ssMagX %s",ssNames[i]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,magX);
+      sprintf(elementName,"ssMagY_%d",i);
+      sprintf(elementLabel,"ssMagY %s",ssNames[i]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,magY);
+
+      Float_t temp=hkPtr->getSSTemp(i);
+      sprintf(elementName,"ssTemp_%d",i);
+      sprintf(elementLabel,"ssTemp %s",ssNames[i]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,mag);
+
+      Float_t ssPos[3]={0};
+      Float_t ssAzimuth=0;
+      Float_t ssElevation=0;
+      Float_t ssRelElevation=0;
+      Int_t goodFlag=hkPtr->getFancySS(0,pos,&ssAzimuth,&ssElevation,&ssRelElevation);
+
+      sprintf(elementName,"ssElevation%d",i);
+      strcpy(elementLabel,ssNames[i]);       
+      if(goodFlag)
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssElevation,AwareAverageType::kDefault,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
        
-       
-
-       
+              
        sprintf(elementName,"ssAzimuthRaw%d",i);
        strcpy(elementLabel,ssNames[i]);
-       if(prettyPtr->ssGoodFlag[i])
-	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssAzimuth[i],AwareAverageType::kDefault,kTRUE,-999);
+       if(goodFlag)
+	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssAzimuth,AwareAverageType::kDefault,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
        
        sprintf(elementName,"ssAzimuthAdu5%d",i);
        strcpy(elementLabel,ssNames[i]);
-       if(prettyPtr->ssGoodFlag[i])
-	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssAzimuthAdu5[i],AwareAverageType::kAngleDegree,kTRUE,-999);
+       if(goodFlag)
+	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssRelElevation,AwareAverageType::kAngleDegree,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kAngleDegree,kTRUE,-999);
        
        sprintf(elementName,"ssGoodFlag%d",i);
        strcpy(elementLabel,ssNames[i]);
-       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,prettyPtr->ssGoodFlag[i]);
+       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,goodFlag);
     }       
     
   }

@@ -196,19 +196,19 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"hk");
+  summaryFile.writeFullJSONFiles(fullDir,"sshk");
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/hkSummary.json.gz",dirName);
+  sprintf(outName,"%s/sshkSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/hkTime.json.gz",dirName);
+  sprintf(outName,"%s/sshkTime.json.gz",dirName);
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastHk",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastSSHk",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);

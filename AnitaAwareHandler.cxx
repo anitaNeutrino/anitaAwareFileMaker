@@ -62,6 +62,26 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
    sprintf(elementLabel,"Buffer Depth");
    fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->bufferDepth);
 
+   sprintf(elementName,"imagePeak");
+   sprintf(elementLabel,"Image Peak");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getImagePeak());
+
+   sprintf(elementName,"coherentSumPeak");
+   sprintf(elementLabel,"Coherent Sum Peak");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getCoherentSumPeak());
+
+   sprintf(elementName,"peakTheta");
+   sprintf(elementLabel,"Peak Theta");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getPeakThetaDeg());
+
+   sprintf(elementName,"peakPhi");
+   sprintf(elementLabel,"Peak Phi");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getPeakPhiDeg());
+
+   sprintf(elementName,"peakPol");
+   sprintf(elementLabel,"Peak Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getPeakPol());
+
 
    for(int bit=0;bit<4;bit++) {
      const char *trigLabels[4]={"RF","ADU5","G12","Soft"};

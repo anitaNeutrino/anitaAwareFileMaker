@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lastSSHk",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastSshk",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);

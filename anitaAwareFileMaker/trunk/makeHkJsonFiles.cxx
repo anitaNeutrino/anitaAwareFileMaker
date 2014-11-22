@@ -105,11 +105,14 @@ int main(int argc, char **argv) {
     char elementLabel[180];
     for( int i=0; i<NUM_INT_TEMPS+NUM_SBS_TEMPS; ++i ) {
       sprintf(elementName,"intTemps%d",i);
-      if(i<NUM_INT_TEMPS)
+      if(i<NUM_INT_TEMPS) {
 	strcpy(elementLabel,CalibratedHk::getInternalTempName(i));      
-      else 
-	strcpy(elementLabel,CalibratedHk::getSBSTempName(i-NUM_INT_TEMPS));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getInternalTemp(i));
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getInternalTemp(i));
+      }
+      else {
+	strcpy(elementLabel,CalibratedHk::getSBSTempName(i-NUM_INT_TEMPS));            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getSBSTemp(i-NUM_INT_TEMPS));
+      }
+
     }
     for( int i=0; i<NUM_EXT_TEMPS; ++i ) {
       sprintf(elementName,"extTemps%d",i);

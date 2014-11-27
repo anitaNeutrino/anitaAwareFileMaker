@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)g12PosPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=g12PosPtr->run;
 
 
@@ -95,7 +95,8 @@ int main(int argc, char **argv) {
 
       TTimeStamp timeStamp((time_t)g12PosPtr->realTime,(Int_t)0);
       //    std::cout << "Run: "<< realEvPtr->
-      
+      if(lastTime<g12PosPtr->realTime) lastTime=g12PosPtr->realTime;
+
       //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
       //Summary file fun
       char elementName[180];
@@ -193,9 +194,9 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/lastG12Pos",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

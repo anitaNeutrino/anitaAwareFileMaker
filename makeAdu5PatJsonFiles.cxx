@@ -104,11 +104,11 @@ int main(int argc, char **argv) {
       
       //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
       //Summary file fun
+
+      //      std::cout << event << "\t" << adu5PatPtr->heading << "\n";
+
       char elementName[180];
       char elementLabel[180];
-      sprintf(elementName,"heading_%c",adu5Letter[whichAdu5]);
-      sprintf(elementLabel,"Heading %c",adu5Letter[whichAdu5]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->heading,AwareAverageType::kDefault,kTRUE,-999);
       
       sprintf(elementName,"latitude_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Latitude %c",adu5Letter[whichAdu5]);      
@@ -121,6 +121,14 @@ int main(int argc, char **argv) {
       sprintf(elementName,"altitude_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Altitude %c",adu5Letter[whichAdu5]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->altitude);
+      
+      sprintf(elementName,"attFlag_%c",adu5Letter[whichAdu5]);
+      sprintf(elementLabel,"AttFlag %c",adu5Letter[whichAdu5]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->attFlag);      
+
+      sprintf(elementName,"heading_%c",adu5Letter[whichAdu5]);
+      sprintf(elementLabel,"Heading %c",adu5Letter[whichAdu5]);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->heading,AwareAverageType::kDefault,kTRUE,999);
       
       sprintf(elementName,"pitch_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Pitch %c",adu5Letter[whichAdu5]);      
@@ -137,10 +145,6 @@ int main(int argc, char **argv) {
       sprintf(elementName,"brms_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"BRMS %c",adu5Letter[whichAdu5]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->brms);
-      
-      sprintf(elementName,"attFlag_%c",adu5Letter[whichAdu5]);
-      sprintf(elementLabel,"AttFlag %c",adu5Letter[whichAdu5]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->attFlag);      
       
     }
     std::cerr << "\n";

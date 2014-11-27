@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)gpsGgaPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=gpsGgaPtr->run;
 
 
@@ -103,6 +103,7 @@ int main(int argc, char **argv) {
 
       TTimeStamp timeStamp((time_t)gpsGgaPtr->realTime,(Int_t)0);
       //    std::cout << "Run: "<< realEvPtr->
+      if(lastTime<gpsGgaPtr->realTime) lastTime=gpsGgaPtr->realTime;
       
       //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
       //Summary file fun
@@ -195,9 +196,9 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/last%sGga",outputDir,instrumentName,gpsName[whichGps]);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

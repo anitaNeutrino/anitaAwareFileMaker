@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)turfRatePtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=turfRatePtr->run;
 
 
@@ -95,6 +95,7 @@ int main(int argc, char **argv) {
 
     TTimeStamp timeStamp((time_t)turfRatePtr->realTime,(Int_t)0);
     //    std::cout << "Run: "<< realEvPtr->
+    if(lastTime<turfRatePtr->realTime) lastTime=turfRatePtr->realTime;
 
     //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
     //Summary file fun
@@ -179,9 +180,9 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/lastSummedTurfRate",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

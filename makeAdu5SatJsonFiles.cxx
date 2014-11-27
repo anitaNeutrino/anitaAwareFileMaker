@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)adu5SatPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=adu5SatPtr->run;
 
 
@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
       TTimeStamp timeStamp((time_t)adu5SatPtr->realTime,(Int_t)0);
       //    std::cout << "Run: "<< realEvPtr->
       
+      if(lastTime<adu5SatPtr->realTime) lastTime=adu5SatPtr->realTime;
       //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
       //Summary file fun
       char elementName[180];
@@ -180,9 +181,9 @@ int main(int argc, char **argv) {
 
 
 sprintf(outName,"%s/%s/lastAdu5%cSat",outputDir,instrumentName,adu5Letter[whichAdu5]);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

@@ -64,7 +64,8 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t firstTime=timeStamp.GetSec();  
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=hdPtr->run;
 
   //Now we set up out run list
@@ -88,7 +89,9 @@ int main(int argc, char **argv) {
     headTree->GetEntry(event);
     awareHandler.addHeader(hdPtr);
 
- 
+
+    if(hdPtr->realTime>lastTime) lastTime=hdPtr->realTime;
+    
   }
   std::cerr << "\n";
   awareHandler.finishHeaderFile();
@@ -107,7 +110,7 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/lastHeader",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
 

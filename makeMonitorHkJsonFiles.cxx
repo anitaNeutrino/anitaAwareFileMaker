@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=monitorPtr->run;
 
 
@@ -93,6 +93,9 @@ int main(int argc, char **argv) {
     monitorTree->GetEntry(event);
 
     TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
+
+    if(lastTime<monitorPtr->realTime) lastTime=monitorPtr->realTime;
+
     //    std::cout << "Run: "<< realEvPtr->
 
     //  std::cout << event << "\t" << timeStamp.AsString("sl") << "\n";
@@ -175,9 +178,9 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/lastMonitor",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

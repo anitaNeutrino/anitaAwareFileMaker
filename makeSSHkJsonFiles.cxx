@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
   TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
-  UInt_t firstTime=timeStamp.GetSec();
+  UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=hkPtr->run;
 
 
@@ -97,6 +97,7 @@ int main(int argc, char **argv) {
 
     
     TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
+    if(lastTime<hkPtr->realTime) lastTime=hkPtr->realTime;
     //    std::cout << "Run: "<< hkPtr->run << "\n";
 
     //    std::cout  << timeStamp.AsString("sl") << "\n";
@@ -209,9 +210,9 @@ int main(int argc, char **argv) {
 
 
   sprintf(outName,"%s/%s/lastSshk",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
-  AwareRunDatabase::updateTouchFile(outName,runNumber,firstTime);
+  AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
 
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);

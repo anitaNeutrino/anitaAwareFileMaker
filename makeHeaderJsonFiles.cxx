@@ -89,7 +89,6 @@ int main(int argc, char **argv) {
     headTree->GetEntry(event);
     awareHandler.addHeader(hdPtr);
 
-
     if(hdPtr->realTime>lastTime) lastTime=hdPtr->realTime;
     
   }

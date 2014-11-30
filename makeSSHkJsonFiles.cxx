@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
       Float_t mag=0;
       Float_t magX=0;
       Float_t magY=0;
-      hkPtr->getSSMagnitude(0,&mag,&magX,&magY);
+      hkPtr->getSSMagnitude(i,&mag,&magX,&magY);
       sprintf(elementName,"ssMag_%d",i);
       sprintf(elementLabel,"ssMag %s",ssNames[i]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,mag);
@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
       Float_t ssAzimuth=0;
       Float_t ssElevation=0;
       Float_t ssRelElevation=0;
-      Int_t goodFlag=hkPtr->getFancySS(0,ssPos,&ssAzimuth,&ssElevation,&ssRelElevation);
+      Int_t goodFlag=hkPtr->getFancySS(i,ssPos,&ssAzimuth,&ssElevation,&ssRelElevation);
 
       sprintf(elementName,"ssElevation%d",i);
       strcpy(elementLabel,ssNames[i]);       

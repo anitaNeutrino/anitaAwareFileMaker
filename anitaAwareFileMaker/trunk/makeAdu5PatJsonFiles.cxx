@@ -127,9 +127,13 @@ int main(int argc, char **argv) {
       sprintf(elementLabel,"AttFlag %c",adu5Letter[whichAdu5]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->attFlag);      
 
+      //RJn check to do something or other
+      if(adu5PatPtr->heading>990 || adu5PatPtr->heading<-400) adu5PatPtr->heading=-999;
+
+
       sprintf(elementName,"heading_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Heading %c",adu5Letter[whichAdu5]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->heading,AwareAverageType::kDefault,kTRUE,999);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->heading,AwareAverageType::kAngleDegree,kTRUE,-999);
       
       sprintf(elementName,"pitch_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Pitch %c",adu5Letter[whichAdu5]);      

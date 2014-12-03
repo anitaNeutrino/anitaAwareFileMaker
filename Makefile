@@ -59,27 +59,29 @@ CLASS_HEADERS =  AnitaAwareHandler.h
 
 
 
-PROGRAM = makeHkJsonFiles makeSSHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles makeSurfHkJsonFiles makeAdu5PatJsonFiles makeAdu5SatJsonFiles makeAdu5VtgJsonFiles makeG12PosJsonFiles makeG12SatJsonFiles makeGpsGgaJsonFiles makeAvgSurfHkJsonFiles makeTurfRateJsonFiles makeSumTurfRateJsonFiles
+PROGRAM = makeHkJsonFiles makeSSHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles makeSurfHkJsonFiles makeAdu5PatJsonFiles makeAdu5SatJsonFiles makeAdu5VtgJsonFiles makeG12PosJsonFiles makeG12SatJsonFiles makeGpsGgaJsonFiles makeAvgSurfHkJsonFiles makeTurfRateJsonFiles makeSumTurfRateJsonFiles makeWaveformSummaryJsonFiles
 
 
 
 all : $(PROGRAM) $(ROOT_LIBRARY)
 
-#The library
 $(ROOT_LIBRARY) : $(LIB_OBJS) 
 	@echo "Linking $@ ..."
 ifeq ($(PLATFORM),macosx)
 # We need to make both the .dylib and the .so
-	$(LD) $(SOFLAGS) $^ $(OutPutOpt) $@
+		$(LD) $(SOFLAGS)$@ $(LDFLAGS) $^ $(OutPutOpt) $@
+ifneq ($(subst $(MACOSX_MINOR),,1234),1234)
 ifeq ($(MACOSX_MINOR),4)
-	ln -sf $@ $(subst .$(DLLSUF),.so,$@)
+		ln -sf $@ $(subst .$(DllSuf),.so,$@)
 else
-	$(LD) -bundle -undefined $(UNDEFOPT) $(LDFLAGS) $^ \
-	 $(OutPutOpt) $(subst .$(DLLSUF),.so,$@)
+		$(LD) -bundle -undefined $(UNDEFOPT) $(LDFLAGS) $^ \
+		   $(OutPutOpt) $(subst .$(DllSuf),.so,$@)
+endif
 endif
 else
-	$(LD) $(SOFLAGS) $(LDFLAGS) $(LIB_OBJS) $(LIBS)  -o $@
+	$(LD) $(SOFLAGS) $(LDFLAGS) $(LIBS) $(LIB_OBJS) -o $@
 endif
+
 
 
 

@@ -127,7 +127,14 @@ int main(int argc, char **argv) {
       sprintf(elementLabel,"AttFlag %c",adu5Letter[whichAdu5]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->attFlag);      
 
-      //RJn check to do something or other
+
+      if(adu5PatPtr->attFlag!=0) {
+      //Rjn check to do something or other
+	adu5PatPtr->heading=-999;
+	adu5PatPtr->pitch=-999;
+	adu5PatPtr->roll=-999;
+
+      }
       if(adu5PatPtr->heading>990 || adu5PatPtr->heading<-400) adu5PatPtr->heading=-999;
 
 
@@ -137,11 +144,11 @@ int main(int argc, char **argv) {
       
       sprintf(elementName,"pitch_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Pitch %c",adu5Letter[whichAdu5]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->pitch);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->pitch,AwareAverageType::kDefault,kTRUE,-999);
       
       sprintf(elementName,"roll_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"Roll %c",adu5Letter[whichAdu5]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->roll);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,adu5PatPtr->roll,AwareAverageType::kDefault,kTRUE,-999);
       
       sprintf(elementName,"mrms_%c",adu5Letter[whichAdu5]);
       sprintf(elementLabel,"MRMS %c",adu5Letter[whichAdu5]);      

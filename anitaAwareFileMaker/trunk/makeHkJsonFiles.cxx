@@ -115,6 +115,14 @@ int main(int argc, char **argv) {
       }
 
     }
+    for(int i=0;i<NUM_NTU_TEMPS;i++) {
+      sprintf(elementName,"ntuTemps%d",i);
+      strcpy(elementLabel,CalibratedHk::getNTUTempName(i));
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getNTUTemp(i));
+
+
+    }
+
     for( int i=0; i<NUM_EXT_TEMPS; ++i ) {
       sprintf(elementName,"extTemps%d",i);
       strcpy(elementLabel,CalibratedHk::getExternalTempName(i));

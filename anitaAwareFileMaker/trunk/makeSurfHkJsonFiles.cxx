@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
 	AnitaGeomTool::getRingAntPolPhiFromSurfChan(surf,chan,ring,ant,pol,phi);
 	sprintf(elementName,"rfPower%d_%d",surf,chan);
 	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getRawRFPower(surf,chan)); //need to mask the top bit (brotter)
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getRFPowerInK(surf,chan)); //need to mask the top bit (brotter)
       }      
     }
 

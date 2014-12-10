@@ -12,6 +12,7 @@
 
 //ANITA EventReaderRoot Includes
 #include "AveragedSurfHk.h"
+#include "AnitaGeomTool.h"
 
 //ROOT Includes
 #include "TTree.h"
@@ -83,6 +84,12 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA3");
 
 
+  int ant;
+  int phi;
+  AnitaRing::AnitaRing_t ring;
+  AnitaPol::AnitaPol_t pol;
+
+
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -102,16 +109,19 @@ int main(int argc, char **argv) {
     char elementLabel[180];
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"Scaler %d-%d",surf+1,chan+1);      
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));           
+
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgScaler[surf][chan]);
       }      
     }
 
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"rmsScaler%d_%d",surf,chan);
-	sprintf(elementLabel,"RMS Scaler %d-%d",surf+1,chan+1);      
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));           
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsScaler[surf][chan]);
       }      
     }
@@ -133,32 +143,36 @@ int main(int argc, char **argv) {
 
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"threshold%d_%d",surf,chan);
-	sprintf(elementLabel,"Threshold %d-%d",surf+1,chan+1);      
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));           
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgThresh[surf][chan]);
       }      
     }
 
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"rmsThreshold%d_%d",surf,chan);
-	sprintf(elementLabel,"RMS Threshold %d-%d",surf+1,chan+1);      
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsThresh[surf][chan]);
       }      
     }
 
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
+	AnitaGeomTool::getRingAntPolPhiFromSurfChan(surf,chan,ring,ant,pol,phi);
 	sprintf(elementName,"rfPower%d_%d",surf,chan);
-	sprintf(elementLabel,"Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->avgRFPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));          
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->getRFPowerInK(surf,chan)); //need to mask the top bit (brotter)
       }      
     }
     for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
       for( int chan=0; chan<RFCHAN_PER_SURF; ++chan ) {
+	AnitaGeomTool::getRingAntPolPhiFromSurfChan(surf,chan,ring,ant,pol,phi);
 	sprintf(elementName,"rmsRfPower%d_%d",surf,chan);
-	sprintf(elementLabel,"RMS Rf Power %d-%d",surf+1,chan+1);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->rmsRFPower[surf][chan]&0x7FFF); //need to mask the top bit (brotter)
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));       
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,avgSurfHkPtr->getRMSRFPowerInK(surf,chan)); //need to mask the top bit (brotter)
       }      
     }
 

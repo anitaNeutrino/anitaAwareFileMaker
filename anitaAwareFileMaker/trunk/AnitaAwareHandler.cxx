@@ -82,6 +82,17 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
    sprintf(elementLabel,"Peak Pol");
    fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getPeakPol());
 
+   sprintf(elementName,"aboveThresholdFlag");
+   sprintf(elementLabel,"abolveThresholdFlag");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getAboveThresholdFlag());
+
+   sprintf(elementName,"binToBinIncreaseFlag");
+   sprintf(elementLabel,"binToBinIncreaseFlag");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getBinToBinIncreaseFlag());
+
+   sprintf(elementName,"saturationFlag");
+   sprintf(elementLabel,"saturationFlag");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,hdPtr->getSaturationFlag());
 
    for(int bit=0;bit<4;bit++) {
      const char *trigLabels[4]={"RF","ADU5","G12","Soft"};

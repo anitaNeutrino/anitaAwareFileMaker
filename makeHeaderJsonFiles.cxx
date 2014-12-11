@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
     headTree->GetEntry(event);
     awareHandler.addHeader(hdPtr);
 
-    if(hdPtr->realTime>lastTime) lastTime=hdPtr->realTime;
+    if(hdPtr->triggerTime>lastTime) lastTime=hdPtr->triggerTime;
     
   }
   std::cerr << "\n";

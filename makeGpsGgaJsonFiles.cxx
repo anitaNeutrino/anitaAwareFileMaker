@@ -90,6 +90,7 @@ int main(int argc, char **argv) {
 
 
   const char *gpsName[3]={"adu5A","adu5B","g12"};
+  const char *GpsName[3]={"Adu5A","Adu5B","G12"};
   const char *gpsTitle[3]={"ADU5A","ADU5B","G12"};
 
 
@@ -195,7 +196,7 @@ int main(int argc, char **argv) {
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/last%sGga",outputDir,instrumentName,gpsName[whichGps]);
+  sprintf(outName,"%s/%s/last%sGga",outputDir,instrumentName,GpsName[whichGps]);
   AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);

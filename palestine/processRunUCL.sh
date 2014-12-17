@@ -21,7 +21,6 @@ for configFile in ${RAW_CONFIG_DIR}/*.config; do
     python ./processConfig.py -i $configFile -r $RUN
 done
 
-exit 1
 
 
 #Step 2: Generate the AWARE Files

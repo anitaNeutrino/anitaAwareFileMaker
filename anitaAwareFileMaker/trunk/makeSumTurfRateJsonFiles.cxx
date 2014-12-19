@@ -190,7 +190,6 @@ int main(int argc, char **argv) {
   }
     
 
-
   char dirName[FILENAME_MAX];
   char dateDirName[FILENAME_MAX];
   char subDateDirName[FILENAME_MAX];

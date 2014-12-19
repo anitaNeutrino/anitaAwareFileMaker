@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   }
    
   //Check an event in the run Tree and see if it is station1 or TestBed (stationId<2)
-  sumTurfRateTree->SetBranchAddress("turf",&turfRatePtr);
+  sumTurfRateTree->SetBranchAddress("sumturf",&turfRatePtr);
   
   sumTurfRateTree->GetEntry(0);
 
@@ -206,15 +206,15 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"turfRate");
+  summaryFile.writeFullJSONFiles(fullDir,"summedTurfRate");
 
   char outName[FILENAME_MAX];
 
-  sprintf(outName,"%s/turfRateSummary.json.gz",dirName);
+  sprintf(outName,"%s/summedTurfRateSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 
 
-  sprintf(outName,"%s/turfRateTime.json.gz",dirName);
+  sprintf(outName,"%s/summedTurfRateTime.json.gz",dirName);
   summaryFile.writeTimeJSONFile(outName);
 
 

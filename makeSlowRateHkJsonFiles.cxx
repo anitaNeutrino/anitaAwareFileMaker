@@ -106,6 +106,21 @@ int main(int argc, char **argv) {
     char elementName[180];
     char elementLabel[180];
     
+    sprintf(elementName,"altitude");
+    sprintf(elementLabel,"Altitude");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,slowPtr->getAltitude());
+
+
+    sprintf(elementName,"latitude");
+    sprintf(elementLabel,"Latitude");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,slowPtr->getLatitude());
+
+
+    sprintf(elementName,"longitude");
+    sprintf(elementLabel,"Longitude");
+    summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,slowPtr->getLongitude());
+
+
     sprintf(elementName,"eventRate1Min");
     sprintf(elementLabel,"Event Rate (1 min.)");
     summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,slowPtr->getEventRate1Min());

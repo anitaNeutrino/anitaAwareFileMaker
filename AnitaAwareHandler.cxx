@@ -102,40 +102,78 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
    }
    
+
+   int numPhiMaskV=0;
+   int numPhiMaskH=0;
+   int numL1MaskV=0;
+   int numL1MaskH=0;
+   int numL3TrigV=0;
+   int numL3TrigH=0;
+
+
    for(int bit=0;bit<16;bit++) {
       sprintf(elementName,"l3TrigBitV%d",bit);
       sprintf(elementLabel,"L3 V-Pol %d",bit+1);
-      int value=hdPtr->isInL3Pattern(bit,AnitaPol::kVertical);
+      int value=(bit+1)*hdPtr->isInL3Pattern(bit,AnitaPol::kVertical);
+      if(value) numL3TrigV;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"l3TrigBitH%d",bit);
       sprintf(elementLabel,"L3 H-Pol %d",bit+1);
-      value=hdPtr->isInL3Pattern(bit,AnitaPol::kHorizontal);
+      value=(bit+1)*hdPtr->isInL3Pattern(bit,AnitaPol::kHorizontal);
+      if(value) numL3TrigH++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
       
       
       sprintf(elementName,"L1TrigMaskV%d",bit);
       sprintf(elementLabel,"L1 V-Pol %d",bit+1);
-      value=hdPtr->isInL1Mask(bit,AnitaPol::kVertical);
+      value=(bit+1)*hdPtr->isInL1Mask(bit,AnitaPol::kVertical);
+      if(value) numL1MaskV++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"L1TrigMaskH%d",bit);
       sprintf(elementLabel,"L1 H-Pol %d",bit+1);
-      value=hdPtr->isInL1Mask(bit,AnitaPol::kHorizontal);
+      value=(bit+1)*hdPtr->isInL1Mask(bit,AnitaPol::kHorizontal);
+      if(value) numL1MaskH++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"PhiTrigMaskV%d",bit);
       sprintf(elementLabel,"Phi V-Pol %d",bit+1);
-      value=hdPtr->isInPhiMask(bit,AnitaPol::kVertical);
+      value=(bit+1)*hdPtr->isInPhiMask(bit,AnitaPol::kVertical);
+      if(value) numPhiMaskV++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"PhiTrigMaskH%d",bit);
       sprintf(elementLabel,"Phi H-Pol %d",bit+1);
-      value=hdPtr->isInPhiMask(bit,AnitaPol::kHorizontal);
+      value=(bit+1)*hdPtr->isInPhiMask(bit,AnitaPol::kHorizontal);
+      if(value) numPhiMaskH++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
-
    }
-   
+
+   sprintf(elementName,"numPhiMaskH");
+   sprintf(elementLabel,"Num Phi H-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskH);  
+
+   sprintf(elementName,"numPhiMaskV");
+   sprintf(elementLabel,"Num Phi V-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskV);  
+
+   sprintf(elementName,"numL1MaskH");
+   sprintf(elementLabel,"Num L1 H-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskH);  
+
+   sprintf(elementName,"numL1MaskV");
+   sprintf(elementLabel,"Num L1 V-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskV);  
+
+   sprintf(elementName,"numL3TrigH");
+   sprintf(elementLabel,"Num L3 H-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL3TrigH);  
+
+   sprintf(elementName,"numL3TrigV");
+   sprintf(elementLabel,"Num L3 V-Pol");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL3TrigV);  
+
 }
 
 

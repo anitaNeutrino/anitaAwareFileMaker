@@ -115,7 +115,7 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
       sprintf(elementName,"l3TrigBitV%d",bit);
       sprintf(elementLabel,"L3 V-Pol %d",bit+1);
       int value=(bit+1)*hdPtr->isInL3Pattern(bit,AnitaPol::kVertical);
-      if(value) numL3TrigV;
+      if(value) numL3TrigV++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"l3TrigBitH%d",bit);

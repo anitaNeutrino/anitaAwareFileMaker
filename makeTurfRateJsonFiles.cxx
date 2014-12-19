@@ -134,17 +134,53 @@ int main(int argc, char **argv) {
     }
 
 
+
+   int numPhiMaskV=0;
+   int numPhiMaskH=0;
+   int numL1MaskV=0;
+   int numL1MaskH=0;
+
    for(int bit=0;bit<16;bit++) {
       sprintf(elementName,"phiTrigMask%d",bit);
       sprintf(elementLabel,"Phi Mask VPol %d",bit+1);
-      int value=turfRatePtr->isPhiMasked(bit);
+      int value=(bit+1)*turfRatePtr->isPhiMasked(bit);
+      if(value)numPhiMaskV++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"phiTrigMaskH%d",bit);
       sprintf(elementLabel,"Phi Mask HPol %d",bit+1);
-      value=turfRatePtr->isPhiMaskedHPol(bit);
+      value=(bit+1)*turfRatePtr->isPhiMaskedHPol(bit);
+      if(value)numPhiMaskH++;
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"l1TrigMask%d",bit);
+      sprintf(elementLabel,"L1 Mask VPol %d",bit+1);
+      value=(bit+1)*turfRatePtr->isL1Masked(bit);
+      if(value)numL1MaskV++;
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
+
+      sprintf(elementName,"l1TrigMaskH%d",bit);
+      sprintf(elementLabel,"L1 Mask HPol %d",bit+1);
+      value=(bit+1)*turfRatePtr->isL1MaskedHPol(bit);
+      if(value)numL1MaskH++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
    }
+
+   sprintf(elementName,"numPhiMaskH");
+   sprintf(elementLabel,"Num Phi H-Pol");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskH);  
+
+   sprintf(elementName,"numPhiMaskV");
+   sprintf(elementLabel,"Num Phi V-Pol");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskV);  
+
+   sprintf(elementName,"numL1MaskH");
+   sprintf(elementLabel,"Num L1 H-Pol");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskH);  
+
+   sprintf(elementName,"numL1MaskV");
+   sprintf(elementLabel,"Num L1 V-Pol");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskV);  
 
 
   }

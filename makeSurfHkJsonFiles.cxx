@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
 
-	sprintf(elementName,"phiScaler%d%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
+	sprintf(elementName,"phiScaler%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
       }      
@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
 
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
-	sprintf(elementName,"phiThreshold%d%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
+	sprintf(elementName,"phiThreshold%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
       }      
@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
 	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getRFPowerInK(surf,chan)); //need to mask the top bit (brotter)
 
-	sprintf(elementName,"phiRfPower%d%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
+	sprintf(elementName,"phiRfPower%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getRFPowerInK(surf,chan)); //need to mask the top bit (brotter)
 

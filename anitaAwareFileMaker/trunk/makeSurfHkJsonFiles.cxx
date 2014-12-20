@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     //   }      
     // }
 
-    for( int surf=3; surf<10; ++surf ) {
+    for( int surf=2; surf<10; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"threshold%d_%d",surf,chan);

@@ -160,7 +160,18 @@ int main(int argc, char **argv) {
     sprintf(outName,"%s/events%d/event%d.json.gz",dirName,eventNumber-(eventNumber%1000),eventNumber);
 
     char elementName[180];
-   
+
+    int chan=0;
+    for(int surf=0;surf<ACTIVE_SURFS;surf++) {
+      TGraph *grClock= realEvent.getGraph(surf,chan);
+      if(grClock) {
+	std::cout << surf << "\t" << grClock->GetN() << "\t" << grClock->GetRMS(2) << "\n";
+	delete grClock;
+      }      
+    }
+
+
+
     
     for(phi=0;phi<NUM_PHI;phi++) {
       for(int ringInd=0;ringInd<3;ringInd++) {

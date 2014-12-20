@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
     //Summary file fun
     char elementName[180];
     char elementLabel[180];
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+    for( int surf=2; surf<10; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"scaler%d_%d",surf,chan);
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     //   }      
     // }
 
-    for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {
+    for( int surf=3; surf<10; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
 	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
 	sprintf(elementName,"threshold%d_%d",surf,chan);

@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
 
-	sprintf(elementName,"phiScaler%d_%d",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
+	sprintf(elementName,"phiScaler%d%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
       }      

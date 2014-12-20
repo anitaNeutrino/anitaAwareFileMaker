@@ -161,15 +161,20 @@ int main(int argc, char **argv) {
 
     char elementName[180];
 
-    int chan=0;
+    int chan=8;
+    int countGood=0;
     for(int surf=0;surf<ACTIVE_SURFS;surf++) {
-      TGraph *grClock= realEvent.getGraph(surf,chan);
+      TGraph *grClock= realEvent.getGraphFromSurfAndChan(surf,chan);
       if(grClock) {
-	std::cout << surf << "\t" << grClock->GetN() << "\t" << grClock->GetRMS(2) << "\n";
+	//	std::cout << surf << "\t" << grClock->GetN() << "\t" << grClock->GetRMS(2) << "\n";	
+	if(grClock->GetRMS()>10) countGood++;
 	delete grClock;
       }      
     }
-
+    if(countGood!=ACTIVE_SURFS) {
+      //Lets skip the event
+      continue;
+    }
 
 
     

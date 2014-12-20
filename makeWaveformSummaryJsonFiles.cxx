@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
     
     headTree->GetEntry(event);
     eventTree->GetEntry(event);
-    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kVTBenS);
+    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kDefault);
     
 
     Int_t eventNumber=hdPtr->eventNumber;

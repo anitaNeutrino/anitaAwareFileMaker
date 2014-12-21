@@ -114,7 +114,17 @@ int main(int argc, char **argv) {
 	sprintf(elementName,"phiScaler%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
-      }      
+      }   
+      
+      for(int l1Chan=0;l1Chan<4;l1Chan++) {
+	AnitaGeomTool::getPhiPolFromSurfL1Chan(surf,l1Chan,phi,pol);
+	sprintf(elementName,"l1Scaler%d_%d",surf,l1Chan);
+	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaPol::polAsChar(pol));      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);
+
+	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaPol::polAsChar(pol));
+	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaPol::polAsChar(pol));      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);  
     }
     
 

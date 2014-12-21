@@ -187,7 +187,7 @@ int main(int argc, char **argv) {
 	  
 	  //Add the waveform RMS
 	  Double_t rms=gr->GetRMS(2);      
-	  sprintf(elementName,"rms%d%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
+	  sprintf(elementName,"rms%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
 	  summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,rms);
 	  
 	  //Delete the graph

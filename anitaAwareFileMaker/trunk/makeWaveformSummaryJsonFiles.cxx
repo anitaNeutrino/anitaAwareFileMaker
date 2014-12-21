@@ -147,18 +147,16 @@ int main(int argc, char **argv) {
     
     headTree->GetEntry(event);
     eventTree->GetEntry(event);
-    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kDefault);
+    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kVTFast);
     
 
     Int_t eventNumber=hdPtr->eventNumber;
     TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
     if(hdPtr->triggerTime>lastTime) lastTime=hdPtr->triggerTime;
-    
-    char outName[FILENAME_MAX];
-    sprintf(outName,"%s/events%d",dirName,eventNumber-(eventNumber%1000));
-    gSystem->mkdir(outName,kTRUE);
-    sprintf(outName,"%s/events%d/event%d.json.gz",dirName,eventNumber-(eventNumber%1000),eventNumber);
 
+    if(hdPtr->triggerTime<100000) continue;
+    //    std::cout << hdPtr->triggerTime << "\n";
+    
     char elementName[180];
 
     int chan=8;

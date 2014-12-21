@@ -125,6 +125,7 @@ int main(int argc, char **argv) {
 	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaPol::polAsChar(pol));
 	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaPol::polAsChar(pol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);  
+      }
     }
     
 

@@ -106,6 +106,9 @@ int main(int argc, char **argv) {
       sprintf(elementName,"diskSpace%d",i);
       strcpy(elementLabel,monitorPtr->getDriveName(i));      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->getDiskSpaceAvailable(i));
+      sprintf(elementName,"diskPercent%d",i);
+      strcpy(elementLabel,monitorPtr->getDriveName(i));      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->getDiskSpacePercentage(i));
     }      
     for( int i=0; i<NUM_HK_TELEM_QUEUES; ++i ) {
       sprintf(elementName,"hkLinks%d",i);

@@ -93,6 +93,8 @@ int main(int argc, char **argv) {
     monitorTree->GetEntry(event);
 
     TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
+    //    std::cout << "real: " << monitorPtr->realTime << "\n";
+    if(monitorPtr->realTime<1e9) continue;
 
     if(lastTime<monitorPtr->realTime) lastTime=monitorPtr->realTime;
 

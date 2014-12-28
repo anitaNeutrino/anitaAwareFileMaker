@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
 
   AwareRunSummaryFileMaker summaryFile(runNumber,instrumentName);   
 
-
+  int donePrint=0;
   //  numEntries=200;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
       TGraph *grClock= realEvent.getGraphFromSurfAndChan(surf,chan);
       if(grClock) {
 	//	std::cout << surf << "\t" << grClock->GetN() << "\t" << grClock->GetRMS(2) << "\n";	
-	if(grClock->GetRMS()>10) countGood++;
+	if(grClock->GetRMS(2)>40) countGood++;
 	delete grClock;
       }      
     }
@@ -177,6 +177,8 @@ int main(int argc, char **argv) {
 
     
     for(phi=0;phi<NUM_PHI;phi++) {
+      Double_t avgRMS=0;
+
       for(int ringInd=0;ringInd<3;ringInd++) {
 	ring=AnitaRing::AnitaRing_t(ringInd);
 	for(int polInd=0;polInd<2;polInd++) {
@@ -185,12 +187,12 @@ int main(int argc, char **argv) {
 	  
 
 	  //The bit below is just to get an FFT
-	  Double_t newX[248],newY[248];
+	  Double_t newX[260],newY[260];
 	  TGraph *grInt = FFTtools::getInterpolatedGraph(gr,1./2.6);
 	  Int_t numSamps=grInt->GetN();
 	  Double_t *xVals=grInt->GetX();
 	  Double_t *yVals=grInt->GetY();
-	  for(int i=0;i<248;i++) {
+	  for(int i=0;i<260;i++) {
 	    if(i<numSamps) {
 	      newX[i]=xVals[i];
 	      newY[i]=yVals[i];
@@ -200,25 +202,43 @@ int main(int argc, char **argv) {
 	      newY[i]=0;
 	    }      
 	  }
-	  TGraph *grNew = new TGraph(248,newX,newY);
-	  TGraph *grFFT = FFTtools::makePowerSpectrumMilliVoltsNanoSecondsdB(grNew);
+	  TGraph *grNew = new TGraph(260,newX,newY);
+	  TGraph *grFFT = FFTtools::makePowerSpectrumMilliVoltsNanoSeconds(grNew);
 
 
 
 
 	  //Add the waveform RMS
 	  Double_t rms=gr->GetRMS(2);      
+	  //	  std::cout << event << "\t" << countGood << "\t" << rms << "\n";
+	  avgRMS+=rms;
 	  sprintf(elementName,"rms%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
 	  summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,rms);
+
+
+	  Double_t freqSum[13]={0};
 
 	  
 	  for(int bin=0;bin<grFFT->GetN();bin++) {
 	    Double_t value=grFFT->GetY()[bin];
 	    Double_t freq=grFFT->GetX()[bin];
-	    sprintf(elementName,"db%04f_%d_%c%c",freq,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
-	    summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,value);
-	  }	    	    
+	    
+	    freqSum[bin/10]+=value;
 
+	    if(!donePrint) {
+	      std::cout << bin << "\t" << freq << "\t" << value << "\n";
+	    }
+	  }	    	    
+	  donePrint=1;
+
+	  for(int bin=0;bin<13;bin++) {
+	    sprintf(elementName,"db%d_%d_%c%c",50+100*bin,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
+	    double power=-100;
+	    if(freqSum[bin]>0) power=10*TMath::Log10(freqSum[bin]);
+	    summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,power);
+	  }
+
+	  
 
 
 	  //Delete the graphs
@@ -229,7 +249,10 @@ int main(int argc, char **argv) {
 	  
 	}
       }
-    }        
+      sprintf(elementName,"avgRms%d",phi+1);     
+      summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,avgRMS);
+    }    
+
   }
   std::cerr << "\n";
 

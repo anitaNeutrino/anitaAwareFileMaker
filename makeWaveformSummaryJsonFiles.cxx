@@ -183,13 +183,49 @@ int main(int argc, char **argv) {
 	  pol=AnitaPol::AnitaPol_t(polInd);
 	  TGraph *gr = realEvent.getGraph(ring,phi,pol);
 	  
+
+	  //The bit below is just to get an FFT
+	  Double_t newX[248],newY[248];
+	  TGraph *grInt = FFTtools::getInterpolatedGraph(gr,1./2.6);
+	  Int_t numSamps=grInt->GetN();
+	  Double_t *xVals=grInt->GetX();
+	  Double_t *yVals=grInt->GetY();
+	  for(int i=0;i<248;i++) {
+	    if(i<numSamps) {
+	      newX[i]=xVals[i];
+	      newY[i]=yVals[i];
+	    }
+	    else {
+	      newX[i]=newX[i-1]+(1./2.6);
+	      newY[i]=0;
+	    }      
+	  }
+	  TGraph *grNew = new TGraph(248,newX,newY);
+	  TGraph *grFFT = FFTtools::makePowerSpectrumMilliVoltsNanoSecondsdB(grNew);
+
+
+
+
 	  //Add the waveform RMS
 	  Double_t rms=gr->GetRMS(2);      
 	  sprintf(elementName,"rms%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
 	  summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,rms);
+
 	  
-	  //Delete the graph
+	  for(int bin=0;bin<grFFT->GetN();bin++) {
+	    Double_t value=grFFT->GetY()[bin];
+	    Double_t freq=grFFT->GetX()[bin];
+	    sprintf(elementName,"db%04f_%d_%c%c",freq,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));     
+	    summaryFile.addVariablePoint(elementName,waveformLabel[phi][ring][pol],timeStamp,value);
+	  }	    	    
+
+
+
+	  //Delete the graphs
 	  delete gr;
+	  delete grInt;
+	  delete grNew;
+	  delete grFFT;
 	  
 	}
       }

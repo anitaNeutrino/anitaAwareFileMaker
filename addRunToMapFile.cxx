@@ -116,10 +116,10 @@ int main(int argc, char **argv) {
     char temp[180];
     MapJsonIn.getline(temp,179); /// {
     MapJsonIn.getline(temp,179); /// poslist : [
-    while(MapJsonIn.getline(temp,179)) { // {unixTime:xxxxx
+    while(MapJsonIn.getline(temp,179)) { // {unixTime:xxxxx,
       if(temp[0]==']') break;
       sscanf(temp,"{\"unixTime\":%u",&thisEntry.unixTime);
-      std::cout << temp << "\t" << thisEntry.unixTime << "\n";
+      //      std::cout << temp << "\t" << thisEntry.unixTime << "\n";
       MapJsonIn.getline(temp,179);
       sscanf(temp,"\"run\":%u",&thisEntry.run);
       MapJsonIn.getline(temp,179);
@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
       MapJsonIn.getline(temp,179);
       sscanf(temp,"\"eventRate\":%f}",&thisEntry.eventRate);
       mapPosMap[thisEntry.unixTime/MAP_DELTA_T]=thisEntry;
-      std::cout << thisEntry.unixTime << "\t" << thisEntry.run << "\t" << thisEntry.eventNumber << "\t" << thisEntry.unixTime/MAP_DELTA_T << "\n";
+      //      std::cout << thisEntry.unixTime << "\t" << thisEntry.run << "\t" << thisEntry.eventNumber << "\t" << thisEntry.unixTime/MAP_DELTA_T << "\n";
 
       MapJsonIn.getline(temp,179); // ","
       if(temp[0]==']') break;
@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
     MapJsonIn.close();
   }
 
-
+  std::cout << "Currently mapPosMap.size() " << mapPosMap.size() << "\n";
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -167,6 +167,7 @@ int main(int argc, char **argv) {
     } 
   }
   std::cerr << "\n";
+  std::cout << "Currently mapPosMap.size() " << mapPosMap.size() << "\n";
  std::ofstream MapJsonOut (mapJsonFile);
  if(MapJsonOut) {
    MapJsonOut << "{\n";

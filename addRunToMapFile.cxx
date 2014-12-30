@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
       if(temp[0]==']') break;
       MapJsonIn.getline(temp,179);
       sscanf(temp,"{\"unixTime\":%u",&thisEntry.unixTime);
+      std::cout << temp << "\t" << thisEntry.unixTime << "\n";
       MapJsonIn.getline(temp,179);
       sscanf(temp,"\"run\":%u",&thisEntry.run);
       MapJsonIn.getline(temp,179);

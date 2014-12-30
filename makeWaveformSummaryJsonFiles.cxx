@@ -222,7 +222,6 @@ int main(int argc, char **argv) {
 	  for(int bin=0;bin<grFFT->GetN();bin++) {
 	    Double_t value=grFFT->GetY()[bin];
 	    Double_t freq=grFFT->GetX()[bin];
-	    
 	    freqSum[bin/10]+=value;
 
 	    if(!donePrint) {

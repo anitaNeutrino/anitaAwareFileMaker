@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
       MapJsonIn.getline(temp,179);
       sscanf(temp,"\"eventRate\":%f}",&thisEntry.eventRate);
       mapPosMap[thisEntry.unixTime/MAP_DELTA_T]=thisEntry;
-      std::cout << thisEntry.unixTime < "\t" << thisEntry.run << "\t" << thisEntry.eventNumber << "\t" << thisEntry.unixTime/MAP_DELTA_T << "\n";
+      std::cout << thisEntry.unixTime << "\t" << thisEntry.run << "\t" << thisEntry.eventNumber << "\t" << thisEntry.unixTime/MAP_DELTA_T << "\n";
 
       MapJsonIn.getline(temp,179); // ","
       if(temp[0]==']') break;

@@ -116,9 +116,8 @@ int main(int argc, char **argv) {
     char temp[180];
     MapJsonIn.getline(temp,179); /// {
     MapJsonIn.getline(temp,179); /// poslist : [
-    while(MapJsonIn.getline(temp,179)) { // {
+    while(MapJsonIn.getline(temp,179)) { // {unixTime:xxxxx
       if(temp[0]==']') break;
-      MapJsonIn.getline(temp,179);
       sscanf(temp,"{\"unixTime\":%u",&thisEntry.unixTime);
       std::cout << temp << "\t" << thisEntry.unixTime << "\n";
       MapJsonIn.getline(temp,179);

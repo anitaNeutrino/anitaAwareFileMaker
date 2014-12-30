@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
  std::ofstream MapJsonOut (mapJsonFile);
  if(MapJsonOut) {
    MapJsonOut << "{\n";
-   MapJsonOut << "\"poslist\" : [";
+   MapJsonOut << "\"poslist\" : [\n";
    std::map<UInt_t,MapPosStruct_t>::iterator mapIt=mapPosMap.begin();
    int firstTime=1;
    for(;mapIt!=mapPosMap.end();mapIt++) {  

@@ -116,10 +116,26 @@ int main(int argc, char **argv) {
     char temp[180];
     MapJsonIn.getline(temp,179); /// {
     MapJsonIn.getline(temp,179); /// poslist : [
-    while(MapJsonIn.getline(temp,179)) {
+    while(MapJsonIn.getline(temp,179)) { // {
       if(temp[0]==']') break;
-      sscanf(temp,"{%u,%u,%u,%f,%f,%f,%f},",&thisEntry.unixTime,&thisEntry.run,&thisEntry.eventNumber,&thisEntry.latitude,&thisEntry.longitude,&thisEntry.altitude,&thisEntry.eventRate);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"{\"unixTime\":%u",&thisEntry.unixTime);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"run\":%u",&thisEntry.run);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"eventNumber\":%u",&thisEntry.eventNumber);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"latitude\":%f",&thisEntry.latitude);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"longitude\":%f",&thisEntry.longitude);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"altitude\":%f",&thisEntry.altitude);
+      MapJsonIn.getline(temp,179);
+      sscanf(temp,"\"eventRate\":%f}",&thisEntry.eventRate);
       mapPosMap[thisEntry.unixTime/MAP_DELTA_T]=thisEntry;
+      MapJsonIn.getline(temp,179); // ","
+      if(temp[0]==']') break;
+
     }
     MapJsonIn.close();
   }
@@ -139,6 +155,7 @@ int main(int argc, char **argv) {
     if(mapIt==mapPosMap.end()) {
       //Need to add a new entry
       thisEntry.unixTime=slowPtr->realTime;
+      thisEntry.run=slowPtr->run;
       thisEntry.eventNumber=slowPtr->eventNumber;
       thisEntry.latitude=slowPtr->getLatitude();
       thisEntry.longitude=slowPtr->getLongitude();
@@ -153,7 +170,6 @@ int main(int argc, char **argv) {
    MapJsonOut << "{\n";
    MapJsonOut << "\"poslist\" : [";
    std::map<UInt_t,MapPosStruct_t>::iterator mapIt=mapPosMap.begin();
-   char temp[180];
    int firstTime=1;
    for(;mapIt!=mapPosMap.end();mapIt++) {  
      if(!firstTime) MapJsonOut << ",\n";

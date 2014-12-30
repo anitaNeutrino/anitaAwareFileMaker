@@ -156,7 +156,14 @@ int main(int argc, char **argv) {
    char temp[180];
    int firstTime=1;
    for(;mapIt!=mapPosMap.end();mapIt++) {  
-     sprintf(temp,"\n{%u,%u,%u,%f,%f,%f,%f}",mapIt->second.unixTime,mapIt->second.run,mapIt->second.eventNumber,mapIt->second.latitude,mapIt->second.longitude,mapIt->second.altitude,mapIt->second.eventRate);
+     MapJsonOut << "{\n";
+     MapJsonOut << "\"unixTime\":" << mapIt->second.unixTime << ",\n";
+     MapJsonOut << "\"run\":" << mapIt->second.run << ",\n";
+     MapJsonOut << "\"eventNumber\":" << mapIt->second.eventNumber << ",\n";
+     MapJsonOut << "\"latitude\":" << mapIt->second.latitude << ",\n";
+     MapJsonOut << "\"longitude\":" << mapIt->second.longitude << ",\n";
+     MapJsonOut << "\"altitude\":" << mapIt->second.altitude << ",\n";
+     MapJsonOut << "\"eventRate\":" << mapIt->second.eventRate << "}\n";
      if(!firstTime) MapJsonOut << ",";
      firstTime=0;
      MapJsonOut << temp;

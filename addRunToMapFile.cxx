@@ -144,23 +144,24 @@ int main(int argc, char **argv) {
       thisEntry.longitude=slowPtr->getLongitude();
       thisEntry.altitude=slowPtr->getAltitude();
       thisEntry.eventRate=slowPtr->getEventRate10Min();
+      mapPosMap[mapTime]=thisEntry;
     } 
   }
-
+  std::cerr << "\n";
  std::ofstream MapJsonOut (mapJsonFile);
  if(MapJsonOut) {
    MapJsonOut << "{\n";
-   MapJsonOut << "poslist : [\n";
+   MapJsonOut << "\"poslist\" : [";
    std::map<UInt_t,MapPosStruct_t>::iterator mapIt=mapPosMap.begin();
    char temp[180];
    int firstTime=1;
    for(;mapIt!=mapPosMap.end();mapIt++) {  
-     sprintf(temp,"{%u,%u,%u,%f,%f,%f,%f}",mapIt->second.unixTime,mapIt->second.run,mapIt->second.eventNumber,mapIt->second.latitude,mapIt->second.longitude,mapIt->second.altitude,mapIt->second.eventRate);
+     sprintf(temp,"\n{%u,%u,%u,%f,%f,%f,%f}",mapIt->second.unixTime,mapIt->second.run,mapIt->second.eventNumber,mapIt->second.latitude,mapIt->second.longitude,mapIt->second.altitude,mapIt->second.eventRate);
      if(!firstTime) MapJsonOut << ",";
      firstTime=0;
      MapJsonOut << temp;
    }
-   MapJsonOut << "]\n}\n";
+   MapJsonOut << "\n]\n}\n";
    MapJsonOut.close();
  }
 }

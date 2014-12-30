@@ -156,9 +156,8 @@ int main(int argc, char **argv) {
    char temp[180];
    int firstTime=1;
    for(;mapIt!=mapPosMap.end();mapIt++) {  
-     if(!firstTime) MapJsonOut << ",";
-     MapJsonOut << "{\n";
-     MapJsonOut << "\"unixTime\":" << mapIt->second.unixTime << ",\n";
+     if(!firstTime) MapJsonOut << ",\n";
+     MapJsonOut << "{\"unixTime\":" << mapIt->second.unixTime << ",\n";
      MapJsonOut << "\"run\":" << mapIt->second.run << ",\n";
      MapJsonOut << "\"eventNumber\":" << mapIt->second.eventNumber << ",\n";
      MapJsonOut << "\"latitude\":" << mapIt->second.latitude << ",\n";

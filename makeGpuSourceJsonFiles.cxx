@@ -128,9 +128,12 @@ int main(int argc, char **argv) {
   Double_t sourceLat=0;
   Double_t sourceLon=0;
   Int_t retVal=0;
+  UInt_t triggerTimeNs=0;
+
 
   TFile *fp = new TFile("temp.root","RECREATE");
   TTree *outTree = new TTree("outTree","outTree");
+  outTree
   outTree->Branch("phiWave",&phiWave,"phiWave/D");
   outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
   outTree->Branch("latitude",&latitude,"latitude/D");
@@ -141,6 +144,7 @@ int main(int argc, char **argv) {
   outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
   outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
   outTree->Branch("retVal",&retVal,"retVal/I");
+  outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
 
   //  numEntries=1;
@@ -154,7 +158,8 @@ int main(int argc, char **argv) {
     adu5PatTree->GetEntry(event);
     
     phiWave=hdPtr->getPeakPhiRad();    
-    thetaWave=-1*hdPtr->getPeakThetaRad();
+    thetaWave=-1*hdPtr->getPeakThetaRad();  //After the -1 positive theta are down going negative theta up going
+    triggerTimeNs=hdPtr->triggerTimeNs;
     latitude=patPtr->latitude;
     longitude=patPtr->longitude;
     altitude=patPtr->altitude;
@@ -196,7 +201,7 @@ int main(int argc, char **argv) {
 int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_t latitude, Double_t longitude, Double_t altitude, Double_t heading, Double_t &sourceLon, Double_t &sourceLat, Double_t desiredAlt) {
 
   std::cout << "getSourceLonAndLatAtDesiredAlt " << phiWave << "\t" << thetaWave << "\n";
-   
+  if(thetaWave<0) return 0;   
    Double_t tempPhiWave=phiWave;
    Double_t tempThetaWave=TMath::PiOver2()-thetaWave;
    //Now need to take account of balloon heading

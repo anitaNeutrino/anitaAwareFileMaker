@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
     adu5PatTree->GetEntry(event);
     
     Double_t phiWave=hdPtr->getPeakPhiRad();    
-    Double_t thetaWave=hdPtr->getPeakThetaRad();
+    Double_t thetaWave=-1*hdPtr->getPeakThetaRad();
     Double_t latitude=patPtr->latitude;
     Double_t longitude=patPtr->longitude;
     Double_t altitude=patPtr->altitude;

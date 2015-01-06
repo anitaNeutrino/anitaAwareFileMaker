@@ -133,7 +133,6 @@ int main(int argc, char **argv) {
 
   TFile *fp = new TFile("temp.root","RECREATE");
   TTree *outTree = new TTree("outTree","outTree");
-  outTree
   outTree->Branch("phiWave",&phiWave,"phiWave/D");
   outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
   outTree->Branch("latitude",&latitude,"latitude/D");

@@ -117,6 +117,32 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA3");
 
   
+
+  Double_t phiWave;//=hdPtr->getPeakPhiRad();    
+  Double_t thetaWave;//=-1*hdPtr->getPeakThetaRad();
+  Double_t latitude;//=patPtr->latitude;
+  Double_t longitude;//=patPtr->longitude;
+  Double_t altitude;//=patPtr->altitude;
+  Double_t heading;//=patPtr->heading;
+  Double_t desiredAlt; //=2000; //Could change this to be ground level ish.
+  Double_t sourceLat=0;
+  Double_t sourceLon=0;
+  Int_t retVal=0;
+
+  TFile *fp = new TFile("temp.root","RECREATE");
+  TTree *outTree = new TTree("outTree","outTree");
+  outTree->Branch("phiWave",&phiWave,"phiWave/D");
+  outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
+  outTree->Branch("latitude",&latitude,"latitude/D");
+  outTree->Branch("longitude",&longitude,"longitude/D");
+  outTree->Branch("altitude",&altitude,"altitude/D");
+  outTree->Branch("heading",&heading,"heading/D");
+  outTree->Branch("desiredAlt",&desiredAlt,"desiredAlt/D");
+  outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
+  outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
+  outTree->Branch("retVal",&retVal,"retVal/I");
+  
+
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
@@ -127,14 +153,15 @@ int main(int argc, char **argv) {
     headTree->GetEntry(event);
     adu5PatTree->GetEntry(event);
     
-    Double_t phiWave=hdPtr->getPeakPhiRad();    
-    Double_t thetaWave=-1*hdPtr->getPeakThetaRad();
-    Double_t latitude=patPtr->latitude;
-    Double_t longitude=patPtr->longitude;
-    Double_t altitude=patPtr->altitude;
-    Double_t heading=patPtr->heading;
-    Double_t desiredAlt=2000; //Could change this to be ground level ish.
-    Double_t sourceLat=0;Double_t sourceLon=0;
+    phiWave=hdPtr->getPeakPhiRad();    
+    thetaWave=-1*hdPtr->getPeakThetaRad();
+    latitude=patPtr->latitude;
+    longitude=patPtr->longitude;
+    altitude=patPtr->altitude;
+    heading=patPtr->heading;
+    desiredAlt=2000; //Could change this to be ground level ish.
+    sourceLat=0;
+    sourceLon=0;
 
 
    fUPGeomTool->getCartesianCoords(latitude,longitude,altitude,
@@ -145,15 +172,15 @@ int main(int argc, char **argv) {
    if(fBalloonPhi<0) fBalloonPhi+=TMath::TwoPi();
    fBalloonHeight=fBalloonPos.Mag();
 
-    Int_t retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
-    std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
-    
+   retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
+   // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
+   outTree->Fill();
 
     
   }
   std::cerr << "\n";
-
-
+  outTree->AutoSave();
+  
   char outputDir[FILENAME_MAX];
   char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");
   if(outputDirEnv==NULL) {

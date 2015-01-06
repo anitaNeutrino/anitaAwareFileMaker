@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
     Double_t desiredAlt=2000; //Could change this to be ground level ish.
     Double_t sourceLat=0;Double_t sourceLon=0;
     Int_t retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
-    std::cout << retVal << "\t" << phiWave << "\t" << thetaWave << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
+    std::cout << retVal << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::DegToRad() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
     
 
     

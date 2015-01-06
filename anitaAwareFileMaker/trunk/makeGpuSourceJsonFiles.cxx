@@ -135,6 +135,16 @@ int main(int argc, char **argv) {
     Double_t heading=patPtr->heading;
     Double_t desiredAlt=2000; //Could change this to be ground level ish.
     Double_t sourceLat=0;Double_t sourceLon=0;
+
+
+   fUPGeomTool->getCartesianCoords(latitude,longitude,altitude,
+				   fBalloonCoords);
+   fBalloonPos.SetXYZ(fBalloonCoords[0],fBalloonCoords[1],fBalloonCoords[2]);
+   fBalloonTheta=fBalloonPos.Theta();
+   fBalloonPhi=fBalloonPos.Phi();
+   if(fBalloonPhi<0) fBalloonPhi+=TMath::TwoPi();
+   fBalloonHeight=fBalloonPos.Mag();
+
     Int_t retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
     std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
     

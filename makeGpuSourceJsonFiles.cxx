@@ -32,8 +32,21 @@ int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_
 
 
 RawAnitaHeader *hdPtr;
-Adu5Pat *adu5PatPtr;
+Adu5Pat *patPtr;
 AnitaGeomTool *fUPGeomTool;
+
+//From UsefulAdu5Pat
+  TVector3 fSourcePos; ///< Private variable to hold the source location in cartesian coordinates.
+  Double_t fSourceLongitude; ///< The source longitude.
+  Double_t fSourceLatitude; ///< The source latitude.
+  Double_t fSourceAltitude; ///< The source altitude.
+  Double_t fThetaWave; ///< The elevation angle of the plane wave in payload centric coordinates.
+  Double_t fPhiWave; ///< The azimuthal angle of the plane wave in payload centric coordinates with phi equals zero lying along the direction of the ADU5 fore antenna.
+  Double_t fBalloonCoords[3]; ///< The balloon position in cartesian coords
+  TVector3 fBalloonPos; ///< The cartesian coords as a TVector3
+  Double_t fBalloonTheta; ///< The balloon theta
+  Double_t fBalloonPhi; ///< The balloon phi
+  Double_t fBalloonHeight; ///< The balloon height
 
 void usage(char **argv) 
 {  
@@ -86,7 +99,7 @@ int main(int argc, char **argv) {
     return -1;
   }
    
-  adu5PatTree->SetBranchAddress("pat",&adu5PatPtr);
+  adu5PatTree->SetBranchAddress("pat",&patPtr);
 
 
   TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
@@ -143,7 +156,7 @@ int main(int argc, char **argv) {
 }
 
 
-int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_t latitude, Double_t longitude, Double_t alttuide, Double_t heading, Double_t &sourceLon, Double_t &sourceLat, Double_t desiredAlt) {
+int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_t latitude, Double_t longitude, Double_t altitude, Double_t heading, Double_t &sourceLon, Double_t &sourceLat, Double_t desiredAlt) {
 
   std::cout << "getSourceLonAndLatAtDesiredAlt " << phiWave << "\t" << thetaWave << "\n";
    

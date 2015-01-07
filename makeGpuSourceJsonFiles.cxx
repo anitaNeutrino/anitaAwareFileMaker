@@ -168,6 +168,8 @@ int main(int argc, char **argv) {
     longitude=patPtr->longitude;
     altitude=patPtr->altitude;
     heading=patPtr->heading;
+    if(heading<0) heading+=360;
+    if(heading>360) heading-=360;
     desiredAlt=2000; //Could change this to be ground level ish.
     sourceLat=0;
     sourceLon=0;

@@ -129,26 +129,35 @@ int main(int argc, char **argv) {
   Double_t sourceLon=0;
   Int_t retVal=0;
   Int_t fakeTheta=0;
-  Int_t pealPol=0;
+  Int_t peakPol=0;
   UInt_t triggerTimeNs=0;
 
 
-  TFile *fp = new TFile("temp.root","RECREATE");
-  TTree *outTree = new TTree("outTree","outTree");
-  outTree->Branch("phiWave",&phiWave,"phiWave/D");
-  outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
-  outTree->Branch("latitude",&latitude,"latitude/D");
-  outTree->Branch("longitude",&longitude,"longitude/D");
-  outTree->Branch("altitude",&altitude,"altitude/D");
-  outTree->Branch("heading",&heading,"heading/D");
-  outTree->Branch("desiredAlt",&desiredAlt,"desiredAlt/D");
-  outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
-  outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
-  outTree->Branch("retVal",&retVal,"retVal/I");
-  outTree->Branch("pealPol",&pealPol,"pealPol/I");
-  outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
-  outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
+  // TFile *fp = new TFile("temp.root","RECREATE");
+  // TTree *outTree = new TTree("outTree","outTree");
+  // outTree->Branch("phiWave",&phiWave,"phiWave/D");
+  // outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
+  // outTree->Branch("latitude",&latitude,"latitude/D");
+  // outTree->Branch("longitude",&longitude,"longitude/D");
+  // outTree->Branch("altitude",&altitude,"altitude/D");
+  // outTree->Branch("heading",&heading,"heading/D");
+  // outTree->Branch("desiredAlt",&desiredAlt,"desiredAlt/D");
+  // outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
+  // outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
+  // outTree->Branch("retVal",&retVal,"retVal/I");
+  // outTree->Branch("peakPol",&peakPol,"peakPol/I");
+  // outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
+  // outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
+
+
+
+ std::ofstream MapJsonOut (mapJsonFile);
+ if(MapJsonOut) {
+   MapJsonOut << "{\n";
+   MapJsonOut << "\"poslist\" : [\n";
+   std::map<UInt_t,MapPosStruct_t>::iterator mapIt=mapPosMap.begin();
+   int firstTime=1;
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -163,7 +172,7 @@ int main(int argc, char **argv) {
     phiWave=hdPtr->getPeakPhiRad();    
     thetaWave=-1*hdPtr->getPeakThetaRad();  //After the -1 positive theta are down going negative theta up going
     triggerTimeNs=hdPtr->triggerTimeNs;
-    pealPol=hdPtr->getPeakPol();
+    peakPol=hdPtr->getPeakPol();
     latitude=patPtr->latitude;
     longitude=patPtr->longitude;
     altitude=patPtr->altitude;
@@ -190,7 +199,7 @@ int main(int argc, char **argv) {
      retVal=getSourceLonAndLatAtDesiredAlt(phiWave,7*TMath::DegToRad(),latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
    }
    // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
-   outTree->Fill();
+   //   outTree->Fill();
 
 
    //Now here we want to output a JSON file containing
@@ -204,10 +213,31 @@ int main(int argc, char **argv) {
    // priority
    // peakPol
 
+   
+   if(!firstTime) MapJsonOut << ",\n";
+   MapJsonOut << "{\"unixTime\":" << mapIt->second.unixTime << ",\n";
+   MapJsonOut << "\"run\":" << mapIt->second.run << ",\n";
+   MapJsonOut << "\"eventNumber\":" << hdPtr->eventNumber << ",\n";
+   MapJsonOut << "\"triggerTimeNs\":" << hdPtr->triggerTimeNs << ",\n";
+   MapJsonOut << "\"priority\":" << hdPtr->priority&0xf << ",\n";
+   MapJsonOut << "\"peakPol\":" << hdPtr->getPeakPol() << ",\n";
+   MapJsonOut << "\"latitude\":" << latitude << ",\n";
+   MapJsonOut << "\"longitude\":" << longitude << ",\n";
+   MapJsonOut << "\"altitude\":" << altitude << ",\n";
+   MapJsonOut << "\"heading\":" << heading << ",\n";
+   MapJsonOut << "\"fakeTheta\":" << fakeTheta << ",\n";
+   MapJsonOut << "\"sourceLon\":" << sourceLon << ",\n";
+   MapJsonOut << "\"sourceLat\":" << sourceLat << "}\n";
+   firstTime=0;
+   }
+ }
+
     
   }
   std::cerr << "\n";
-  outTree->AutoSave();
+  //  outTree->AutoSave();
+  MapJsonOut << "\n]\n}\n";
+  MapJsonOut.close();
   
   char outputDir[FILENAME_MAX];
   char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");

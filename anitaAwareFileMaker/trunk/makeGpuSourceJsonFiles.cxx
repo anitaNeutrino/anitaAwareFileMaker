@@ -129,6 +129,7 @@ int main(int argc, char **argv) {
   Double_t sourceLon=0;
   Int_t retVal=0;
   Int_t fakeTheta=0;
+  Int_t pealPol=0;
   UInt_t triggerTimeNs=0;
 
 
@@ -144,6 +145,7 @@ int main(int argc, char **argv) {
   outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
   outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
   outTree->Branch("retVal",&retVal,"retVal/I");
+  outTree->Branch("pealPol",&pealPol,"pealPol/I");
   outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
   outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
@@ -161,6 +163,7 @@ int main(int argc, char **argv) {
     phiWave=hdPtr->getPeakPhiRad();    
     thetaWave=-1*hdPtr->getPeakThetaRad();  //After the -1 positive theta are down going negative theta up going
     triggerTimeNs=hdPtr->triggerTimeNs;
+    pealPol=hdPtr->getPeakPol();
     latitude=patPtr->latitude;
     longitude=patPtr->longitude;
     altitude=patPtr->altitude;
@@ -187,6 +190,18 @@ int main(int argc, char **argv) {
    // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
    outTree->Fill();
 
+
+   //Now here we want to output a JSON file containing
+   // eventNumber
+   // triggerTimeNs
+   // sourceLon
+   // sourceLat
+   // heading
+   // latitude
+   // longitude
+   // priority
+   // peakPol
+
     
   }
   std::cerr << "\n";
@@ -206,7 +221,7 @@ int main(int argc, char **argv) {
 
 int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_t latitude, Double_t longitude, Double_t altitude, Double_t heading, Double_t &sourceLon, Double_t &sourceLat, Double_t desiredAlt) {
 
-  std::cout << "getSourceLonAndLatAtDesiredAlt " << phiWave << "\t" << thetaWave << "\n";
+  //  std::cout << "getSourceLonAndLatAtDesiredAlt " << phiWave << "\t" << thetaWave << "\n";
   if(thetaWave<0) return 0;   
    Double_t tempPhiWave=phiWave;
    Double_t tempThetaWave=TMath::PiOver2()-thetaWave;
@@ -233,7 +248,7 @@ int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_
    }
    else std::cout << "heading bad" << std::endl;
    
-   std::cout << "Get source angles: " <<  tempThetaWave << "\t" << tempPhiWave << "\n";
+   //   std::cout << "Get source angles: " <<  tempThetaWave << "\t" << tempPhiWave << "\n";
 
  
    
@@ -295,6 +310,6 @@ int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_
    } while(TMath::Abs(nextRe-re)>1);
      //   fUPGeomTool->getLonLat(fSourcePos,sourceLon,sourceLat);
    //   sourceLat*=-1;
-   std::cout << "source lat " << sourceLat << " sourceLon " << sourceLon << std::endl;
+   //   std::cout << "source lat " << sourceLat << " sourceLon " << sourceLon << std::endl;
    return 1;
 }

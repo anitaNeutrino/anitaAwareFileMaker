@@ -182,7 +182,7 @@ int main(int argc, char **argv) {
    retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
    if(retVal==0) {
      fakeTheta=1;
-     retVal=getSourceLonAndLatAtDesiredAlt(phiWave,7*TMath::DegToRad(),latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
+     retVal=getSourceLonAndLatAtDesiredAlt(phiWave,5*TMath::DegToRad(),latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
    }
    // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
    outTree->Fill();

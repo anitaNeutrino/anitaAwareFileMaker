@@ -128,6 +128,7 @@ int main(int argc, char **argv) {
   Double_t sourceLat=0;
   Double_t sourceLon=0;
   Int_t retVal=0;
+  Int_t fakeTheta=0;
   UInt_t triggerTimeNs=0;
 
 
@@ -143,6 +144,7 @@ int main(int argc, char **argv) {
   outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
   outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
   outTree->Branch("retVal",&retVal,"retVal/I");
+  outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
   outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
 
@@ -166,6 +168,7 @@ int main(int argc, char **argv) {
     desiredAlt=2000; //Could change this to be ground level ish.
     sourceLat=0;
     sourceLon=0;
+    fakeTheta=0;
 
 
    fUPGeomTool->getCartesianCoords(latitude,longitude,altitude,
@@ -177,6 +180,10 @@ int main(int argc, char **argv) {
    fBalloonHeight=fBalloonPos.Mag();
 
    retVal=getSourceLonAndLatAtDesiredAlt(phiWave,thetaWave,latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
+   if(retVal==0) {
+     fakeTheta=1;
+     retVal=getSourceLonAndLatAtDesiredAlt(phiWave,10*TMath::DegToRad(),latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
+   }
    // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
    outTree->Fill();
 

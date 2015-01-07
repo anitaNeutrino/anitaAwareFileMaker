@@ -149,22 +149,31 @@ int main(int argc, char **argv) {
   // outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
   // outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
+  char outputDir[FILENAME_MAX];
+  char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");
+  if(outputDirEnv==NULL) {
+    sprintf(outputDir,"/unix/anita1/data/aware/output");
+  }
+  else {
+    strncpy(outputDir,outputDirEnv,FILENAME_MAX);
+  }
 
-
-
- std::ofstream MapJsonOut (mapJsonFile);
- if(MapJsonOut) {
-   MapJsonOut << "{\n";
-   MapJsonOut << "\"poslist\" : [\n";
-   std::map<UInt_t,MapPosStruct_t>::iterator mapIt=mapPosMap.begin();
-   int firstTime=1;
-
+  char mapJsonFile[FILENAME_MAX];
+  sprintf(mapJsonFile,"%s/ANITA3/map/mapRun%d.json",outputDir,runNumber);
+  std::ofstream MapJsonOut (mapJsonFile);
+  if(MapJsonOut) {
+    MapJsonOut << "{\n";
+    MapJsonOut << "\"poslist\" : [\n";
+  }
+  
+  int firstTime=1;
+  
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
     if(event%starEvery==0) {
       std::cerr << "*";       
     }
-
+    
     //This line gets the Header Entry
     headTree->GetEntry(event);
     adu5PatTree->GetEntry(event);
@@ -239,14 +248,6 @@ int main(int argc, char **argv) {
   MapJsonOut << "\n]\n}\n";
   MapJsonOut.close();
   
-  char outputDir[FILENAME_MAX];
-  char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");
-  if(outputDirEnv==NULL) {
-    sprintf(outputDir,"/unix/anita1/data/aware/output");
-  }
-  else {
-    strncpy(outputDir,outputDirEnv,FILENAME_MAX);
-  }
     
 }
 

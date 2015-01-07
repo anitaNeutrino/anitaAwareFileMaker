@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
    MapJsonOut << "\"run\":" << runNumber << ",\n";
    MapJsonOut << "\"eventNumber\":" << hdPtr->eventNumber << ",\n";
    MapJsonOut << "\"triggerTimeNs\":" << hdPtr->triggerTimeNs << ",\n";
-   MapJsonOut << "\"priority\":" << hdPtr->priority&0xf << ",\n";
+   MapJsonOut << "\"priority\":" << (hdPtr->priority&0xf) << ",\n";
    MapJsonOut << "\"peakPol\":" << hdPtr->getPeakPol() << ",\n";
    MapJsonOut << "\"latitude\":" << latitude << ",\n";
    MapJsonOut << "\"longitude\":" << longitude << ",\n";

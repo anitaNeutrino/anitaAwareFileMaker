@@ -9,6 +9,7 @@
 
 //Includes
 #include <iostream>
+#include <fstream>
 
 //ANITA EventReaderRoot Includes
 #include "RawAnitaHeader.h"
@@ -166,7 +167,7 @@ int main(int argc, char **argv) {
     MapJsonOut << "\"poslist\" : [\n";
   }
   
-  int firstTime=1;
+  int firstJson=1;
   
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -223,9 +224,9 @@ int main(int argc, char **argv) {
    // peakPol
 
    
-   if(!firstTime) MapJsonOut << ",\n";
+   if(!firstJson) MapJsonOut << ",\n";
    MapJsonOut << "{\"unixTime\":" << mapIt->second.unixTime << ",\n";
-   MapJsonOut << "\"run\":" << mapIt->second.run << ",\n";
+   MapJsonOut << "\"run\":" << runNumber << ",\n";
    MapJsonOut << "\"eventNumber\":" << hdPtr->eventNumber << ",\n";
    MapJsonOut << "\"triggerTimeNs\":" << hdPtr->triggerTimeNs << ",\n";
    MapJsonOut << "\"priority\":" << hdPtr->priority&0xf << ",\n";
@@ -237,11 +238,7 @@ int main(int argc, char **argv) {
    MapJsonOut << "\"fakeTheta\":" << fakeTheta << ",\n";
    MapJsonOut << "\"sourceLon\":" << sourceLon << ",\n";
    MapJsonOut << "\"sourceLat\":" << sourceLat << "}\n";
-   firstTime=0;
-   }
- }
-
-    
+   firstJson=0;
   }
   std::cerr << "\n";
   //  outTree->AutoSave();

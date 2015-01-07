@@ -225,7 +225,7 @@ int main(int argc, char **argv) {
 
    
    if(!firstJson) MapJsonOut << ",\n";
-   MapJsonOut << "{\"unixTime\":" << mapIt->second.unixTime << ",\n";
+   MapJsonOut << "{\"unixTime\":" << hdPtr->realTime << ",\n";
    MapJsonOut << "\"run\":" << runNumber << ",\n";
    MapJsonOut << "\"eventNumber\":" << hdPtr->eventNumber << ",\n";
    MapJsonOut << "\"triggerTimeNs\":" << hdPtr->triggerTimeNs << ",\n";

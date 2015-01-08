@@ -264,7 +264,7 @@ int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_
 
      //std::cout << "tempPhiWave3: " << arbDir.Phi() << "\t" << tempPhiWave << "\n";
 
-     arbDir.Rotate((heading)*TMath::DegToRad(),fUPGeomTool->fHeadingRotationAxis);
+     arbDir.Rotate((heading+45)*TMath::DegToRad(),fUPGeomTool->fHeadingRotationAxis);
 
      tempPhiWave=arbDir.Phi();
      //std::cout << "tempPhiWave2: " << tempPhiWave << "\n";

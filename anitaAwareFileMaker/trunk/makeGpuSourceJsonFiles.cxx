@@ -134,21 +134,21 @@ int main(int argc, char **argv) {
   UInt_t triggerTimeNs=0;
 
 
-  // TFile *fp = new TFile("temp.root","RECREATE");
-  // TTree *outTree = new TTree("outTree","outTree");
-  // outTree->Branch("phiWave",&phiWave,"phiWave/D");
-  // outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
-  // outTree->Branch("latitude",&latitude,"latitude/D");
-  // outTree->Branch("longitude",&longitude,"longitude/D");
-  // outTree->Branch("altitude",&altitude,"altitude/D");
-  // outTree->Branch("heading",&heading,"heading/D");
-  // outTree->Branch("desiredAlt",&desiredAlt,"desiredAlt/D");
-  // outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
-  // outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
-  // outTree->Branch("retVal",&retVal,"retVal/I");
-  // outTree->Branch("peakPol",&peakPol,"peakPol/I");
-  // outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
-  // outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
+  TFile *fp = new TFile("temp.root","RECREATE");
+  TTree *outTree = new TTree("outTree","outTree");
+  outTree->Branch("phiWave",&phiWave,"phiWave/D");
+  outTree->Branch("thetaWave",&thetaWave,"thetaWave/D");
+  outTree->Branch("latitude",&latitude,"latitude/D");
+  outTree->Branch("longitude",&longitude,"longitude/D");
+  outTree->Branch("altitude",&altitude,"altitude/D");
+  outTree->Branch("heading",&heading,"heading/D");
+  outTree->Branch("desiredAlt",&desiredAlt,"desiredAlt/D");
+  outTree->Branch("sourceLat",&sourceLat,"sourceLat/D");
+  outTree->Branch("sourceLon",&sourceLon,"sourceLon/D");
+  outTree->Branch("retVal",&retVal,"retVal/I");
+  outTree->Branch("peakPol",&peakPol,"peakPol/I");
+  outTree->Branch("fakeTheta",&fakeTheta,"fakeTheta/I");
+  outTree->Branch("triggerTimeNs",&triggerTimeNs,"triggerTimeNs/i");
   
   char outputDir[FILENAME_MAX];
   char *outputDirEnv=getenv("AWARE_OUTPUT_DIR");
@@ -209,7 +209,7 @@ int main(int argc, char **argv) {
      retVal=getSourceLonAndLatAtDesiredAlt(phiWave,7*TMath::DegToRad(),latitude,longitude,altitude,heading,sourceLon,sourceLat,desiredAlt);
    }
    // std::cout << retVal << "\t" << latitude << "\t" << longitude << "\t" << phiWave*TMath::RadToDeg() << "\t" << thetaWave*TMath::RadToDeg() << "\t" << heading << "\t" << sourceLon << "\t" << sourceLat << "\n";
-   //   outTree->Fill();
+   outTree->Fill();
 
 
    //Now here we want to output a JSON file containing
@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
    firstJson=0;
   }
   std::cerr << "\n";
-  //  outTree->AutoSave();
+  outTree->AutoSave();
   MapJsonOut << "\n]\n}\n";
   MapJsonOut.close();
   
@@ -264,7 +264,7 @@ int getSourceLonAndLatAtDesiredAlt(Double_t phiWave, Double_t thetaWave, Double_
 
      //std::cout << "tempPhiWave3: " << arbDir.Phi() << "\t" << tempPhiWave << "\n";
 
-     arbDir.Rotate((heading+45)*TMath::DegToRad(),fUPGeomTool->fHeadingRotationAxis);
+     arbDir.Rotate((heading)*TMath::DegToRad(),fUPGeomTool->fHeadingRotationAxis);
 
      tempPhiWave=arbDir.Phi();
      //std::cout << "tempPhiWave2: " << tempPhiWave << "\n";

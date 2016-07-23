@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
     
 
   char instrumentName[20];
-  sprintf(instrumentName,"ANITA3");
+  sprintf(instrumentName,"ANITA4");
 
   char dirName[FILENAME_MAX];
   char dateDirName[FILENAME_MAX];

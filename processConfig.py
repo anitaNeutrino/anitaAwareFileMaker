@@ -38,7 +38,7 @@ def main(argv):
 
     #The only tricky thing is sorting out the path
     awareDir=os.getenv('AWARE_OUTPUT_DIR', "./output")
-    runDir=awareDir+"/ANITA3/runs"+str(run-run%10000)+"/runs"+str(run-run%100)+"/run"+str(run)
+    runDir=awareDir+"/ANITA4/runs"+str(run-run%10000)+"/runs"+str(run-run%100)+"/run"+str(run)
     configBase=os.path.splitext(os.path.basename(inputfilename))[0]
     outFile=runDir+"/config/"+configBase+".json"
 

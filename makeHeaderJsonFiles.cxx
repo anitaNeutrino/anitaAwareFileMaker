@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
   if(starEvery==0) starEvery++;
 
   char instrumentName[20];
-  sprintf(instrumentName,"ANITA3");
+  sprintf(instrumentName,"ANITA4");
 
   AnitaAwareHandler awareHandler;
   awareHandler.startHeaderFile(runNumber,dateInt);

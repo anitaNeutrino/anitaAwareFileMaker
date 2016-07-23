@@ -11,7 +11,7 @@
 #include "AnitaAwareHandler.h"
 
 
-#define INST_NAME "ANITA3"
+#define INST_NAME "ANITA4"
 
 
 AnitaAwareHandler::AnitaAwareHandler() 
@@ -23,7 +23,7 @@ AnitaAwareHandler::AnitaAwareHandler()
 
 void AnitaAwareHandler::startHeaderFile(int runNumber, int dateInt)
 {
-   fHeadSumFile=new AwareRunSummaryFileMaker(runNumber,"ANITA3",60);
+   fHeadSumFile=new AwareRunSummaryFileMaker(runNumber,"ANITA4",60);
    fRunNumber=runNumber;
    fDateInt=dateInt;
 }

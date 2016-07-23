@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
 
   //Need to read in the map
   char mapJsonFile[FILENAME_MAX];
-  sprintf(mapJsonFile,"%s/ANITA3/map",outputDir);
+  sprintf(mapJsonFile,"%s/ANITA4/map",outputDir);
   gSystem->mkdir(mapJsonFile);
-  sprintf(mapJsonFile,"%s/ANITA3/map/posSum.json",outputDir);
+  sprintf(mapJsonFile,"%s/ANITA4/map/posSum.json",outputDir);
 
   MapPosStruct_t thisEntry;
   std::map<UInt_t,MapPosStruct_t> mapPosMap;

@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
   if(starEvery==0) starEvery++;
 
   char instrumentName[20];
-  sprintf(instrumentName,"ANITA3");
+  sprintf(instrumentName,"ANITA4");
 
   
 
@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
   }
 
   char mapJsonFile[FILENAME_MAX];
-  sprintf(mapJsonFile,"%s/ANITA3/map/mapRun%d.json",outputDir,runNumber);
+  sprintf(mapJsonFile,"%s/ANITA4/map/mapRun%d.json",outputDir,runNumber);
   std::ofstream MapJsonOut (mapJsonFile);
   if(MapJsonOut) {
     MapJsonOut << "{\n";

@@ -77,12 +77,12 @@ int main(int argc, char **argv) {
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
-  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA3",60);
+  AwareRunSummaryFileMaker summaryFile(runNumber,"ANITA4",60);
 
   
 
   char instrumentName[20];
-  sprintf(instrumentName,"ANITA3");
+  sprintf(instrumentName,"ANITA4");
 
 
   char adu5Letter[2]={'A','B'};

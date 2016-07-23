@@ -7,7 +7,7 @@ fi
 
 
 #Local config directory
-BASE_DIR=/data/palestine2016
+BASE_DIR=/data/flight1415
 AWARE_FILEMAKER_DIR=/home/anita/Code/anitaAwareFileMaker
 ANITA_FILEMAKER_DIR=/home/anita/Code/anitaTreeMaker
 export PYTHONPATH=/home/anita/Code/aware/python
@@ -24,7 +24,7 @@ ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 if [ "$2" = "" ]
 then
     cd ${ANITA_FILEMAKER_DIR}
-    ./runPalestineFileMaker.sh $RUN
+    ./runPalestineFileMakerA3.sh $RUN
 fi
 
 

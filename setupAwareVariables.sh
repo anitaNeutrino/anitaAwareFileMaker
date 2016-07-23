@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export AWARE_OUTPUT_DIR=/anitaStorage/antarctica14/aware/output/
+export AWARE_OUTPUT_DIR=/var/www/html/aware/web/output
 

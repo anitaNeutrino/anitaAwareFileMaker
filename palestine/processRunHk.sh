@@ -24,7 +24,7 @@ ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 if [ "$2" = "" ]
 then
     cd ${ANITA_FILEMAKER_DIR}
-    ./runPalestineFileMaker.sh $RUN
+    ./remakeHkFiles.sh $RUN
 fi
 
 
@@ -49,13 +49,16 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     ./makeSSHkJsonFiles ${ROOT_RUN_DIR}/sshkFile${RUN}.root  
     echo "SURF Hk"
     echo "=========================================="
-#    ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root
+    ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root
     echo "Avg. SURF Hk"
     echo "=========================================="
     ./makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
     echo "TURF Rate"
     echo "=========================================="
-    ./makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
+    ./makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root
+    echo "Summed TURF Rate"
+    echo "=========================================="
+    ./makeSumTurfRateJsonFiles ${ROOT_RUN_DIR}/sumTurfRateFile${RUN}.root    
     echo "Acqd"
     echo "=========================================="
     ./makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     

@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t lastTime=timeStamp.GetSec();
   UInt_t runNumber=hkPtr->run;
-
+  std::cout << hkPtr->run << "\t" << hkPtr->realTime << "\n";
 
   //Now we set up out run list
   Long64_t numEntries=hkTree->GetEntries();
@@ -109,6 +109,7 @@ int main(int argc, char **argv) {
       if(i<NUM_INT_TEMPS) {
 	strcpy(elementLabel,CalibratedHk::getInternalTempName(i));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getInternalTemp(i));
+	//	std::cout << "Int temp: " << i << "\t" << hkPtr->getInternalTemp(i) << "\n";
       }
       else {
 	strcpy(elementLabel,CalibratedHk::getSBSTempName(i-NUM_INT_TEMPS));            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getSBSTemp(i-NUM_INT_TEMPS));

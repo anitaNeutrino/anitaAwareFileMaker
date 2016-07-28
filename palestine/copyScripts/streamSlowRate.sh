@@ -9,7 +9,8 @@
 
 TDRSS_DIR=/data/palestine2016/telem/slow_tdrss
 IRIDIUM_DIR=/data/palestine2016/telem/iridium
-TDRSS_HOST=gsetx
+#TDRSS_HOST=gsetx
+TDRSS_HOST=tdrss1
 
 
 while [ 1 ] ; do

@@ -7,7 +7,8 @@
 # to the remote machines .ssh/authorized_keys
 
 TDRSS_DIR=/data/palestine2016/telem/fast_tdrss
-TDRSS_HOST=gsetx
+#TDRSS_HOST=gsetx
+TDRSS_HOST=tdrss1
 
 
 while [ 1 ] ; do

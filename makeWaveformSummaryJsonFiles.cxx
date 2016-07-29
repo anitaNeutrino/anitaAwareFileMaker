@@ -80,6 +80,8 @@ int main(int argc, char **argv) {
 
 
   Long64_t numEntries=eventTree->GetEntries();
+  std::cout << "Got : " << numEntries << " events to process\n";
+  //  numEntries=10000;
   Long64_t starEvery=numEntries/80;
   if(starEvery==0) starEvery++;
 
@@ -147,11 +149,12 @@ int main(int argc, char **argv) {
     
     headTree->GetEntry(event);
     eventTree->GetEntry(event);
-    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kDefault);
+    UsefulAnitaEvent realEvent(rawEvPtr,WaveCalType::kVTFast);
     
 
     Int_t eventNumber=hdPtr->eventNumber;
-    TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
+    //    TTimeStamp timeStamp((time_t)hdPtr->triggerTime,(Int_t)hdPtr->triggerTimeNs);
+    TTimeStamp timeStamp((time_t)hdPtr->triggerTime,0);//(Int_t)hdPtr->triggerTimeNs);
     if(hdPtr->triggerTime>lastTime) lastTime=hdPtr->triggerTime;
 
     if(hdPtr->triggerTime<100000) continue;
@@ -254,14 +257,13 @@ int main(int argc, char **argv) {
 
   }
   std::cerr << "\n";
-
+  fp->Close();
+  fpHead->Close();
   char outName[FILENAME_MAX];
-  
-  char outName2[FILENAME_MAX];
-  sprintf(outName2,"%s/full",dirName);
-  gSystem->mkdir(outName2,kTRUE);
 
-  summaryFile.writeFullJSONFiles(outName2,"waveform");
+  gSystem->mkdir(dirName,kTRUE);
+  summaryFile.writeSingleFullJSONFile(dirName,"waveform");
+
   sprintf(outName,"%s/waveformSummary.json.gz",dirName);
   summaryFile.writeSummaryJSONFile(outName);
 

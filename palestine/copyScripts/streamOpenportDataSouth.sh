@@ -1,8 +1,11 @@
 #!/bin/bash
-OPENPORT_DIR=/storage/flight1415/telem/openport
+OPENPORT_DIR=/data/palestine2016/telem/openport
+
+echo "PID = $$"
+echo $$ > /tmp/pidOpenportCopy
 
 while [ 1 ] ; do
-    rsync -avz tdrss:/data/anita/openport/00[6789]* $OPENPORT_DIR
+    rsync -avz tdrss1:/data/anita/openport/* $OPENPORT_DIR
 
     sleep 10
 done

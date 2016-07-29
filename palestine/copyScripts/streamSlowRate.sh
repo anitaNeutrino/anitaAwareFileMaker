@@ -12,6 +12,8 @@ IRIDIUM_DIR=/data/palestine2016/telem/iridium
 #TDRSS_HOST=gsetx
 TDRSS_HOST=tdrss1
 
+echo "PID = $$"
+echo $$ > /tmp/pidSlowCopy
 
 while [ 1 ] ; do
     scp ${TDRSS_HOST}:/data/anita/slow_tdrss/.stor_cur_run $TDRSS_DIR

@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  summaryFile.writeFullJSONFiles(fullDir,"slow");
+  summaryFile.writeSingleFullJSONFile(dirName,"slow");
 
   char outName[FILENAME_MAX];
 

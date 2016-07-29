@@ -1,10 +1,16 @@
-#/bin/bash
+#!/bin/bash
 # Simple script to stream LOS data for AWARE
 # LOS_DIR is local directory for storing LOS telem
 # LOS_HOST is the hostname (or .ssh/config alias) of the machine receiving
 # the LOS data. This machine needs to be set up for passwordless ssh
 # i.e. we must have used ssh-copy-id to copy this machines public ssh key
 # to the remote machines .ssh/authorized_keys 
+
+
+echo "PID = $$"
+echo $$ > /tmp/pidLOSCopy
+
+
 
 LOS_DIR=/data/palestine2016/telem/raw_los
 LOS_HOST=los

@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
 
   char tagName[180];
   sprintf(tagName,"%sGga",gpsName[whichGps]); 
-  summaryFile.writeFullJSONFiles(fullDir,tagName);
+  summaryFile.writeSingleFullJSONFile(dirName,tagName);
 
   char outName[FILENAME_MAX];
 

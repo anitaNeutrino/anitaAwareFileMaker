@@ -207,7 +207,7 @@ void AnitaAwareHandler::finishHeaderFile()
   char fullDir[FILENAME_MAX];
   sprintf(fullDir,"%s/full",dirName);
   gSystem->mkdir(fullDir,kTRUE);
-  fHeadSumFile->writeFullJSONFiles(fullDir,"header");
+  fHeadSumFile->writeSingleFullJSONFile(dirName,"header");
 
   char outName[FILENAME_MAX];
 

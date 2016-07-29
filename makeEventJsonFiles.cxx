@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
   // sprintf(outName2,"%s/full",dirName);
   // gSystem->mkdir(outName2,kTRUE);
 
-  // summaryFile.writeFullJSONFiles(outName2,"header");
+  // summaryFile.writeSingleFullJSONFile(outName2,"header");
   // sprintf(outName,"%s/headerSummary.json.gz",dirName);
   // summaryFile.writeSummaryJSONFile(outName);
 

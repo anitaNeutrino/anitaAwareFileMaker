@@ -11,6 +11,9 @@ TDRSS_DIR=/data/palestine2016/telem/fast_tdrss
 TDRSS_HOST=tdrss1
 
 
+echo "PID = $$"
+echo $$ > /tmp/pidTDRSSCopy
+
 while [ 1 ] ; do
     scp ${TDRSS_HOST}:/data/anita/fast_tdrss/.stor_cur_run $TDRSS_DIR
     CURRENT_RUN=`cat $TDRSS_DIR/.stor_cur_run`    

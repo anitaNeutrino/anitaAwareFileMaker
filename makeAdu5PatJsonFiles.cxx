@@ -194,7 +194,7 @@ int main(int argc, char **argv) {
 
   char tagName[180];
   sprintf(tagName,"adu5%cPat",adu5Letter[whichAdu5]); 
-  summaryFile.writeFullJSONFiles(fullDir,tagName);
+  summaryFile.writeSingleFullJSONFile(dirName,tagName);
 
   char outName[FILENAME_MAX];
 

@@ -1,116 +1,49 @@
-#############################################################################
-## Makefile -- New Version of my Makefile that works on both linux
-##              and mac os x
-## Ryan Nichol <rjn@hep.ucl.ac.uk>
-##############################################################################
-include Makefile.arch
-
-SRCSUF=cxx
-DLLSUF=so
-OBJSUF=o
-
-SYSLIBS= -lprofiler
-
-#Toggles the FFT functions on and off
-USE_FFT_TOOLS=1
-
-ifdef USE_FFT_TOOLS
-FFTLIBS = -lRootFftwWrapper -lfftw3
-FFTFLAG = -DUSE_FFT_TOOLS
-else
-FFTLIBS =
-FFTFLAG =
-endif
+### Makefile that delegates building either to cmake or legacy Makefile 
+### Cmake is default, if you don't want to use CMake, you can do make legacy   
+### ( or move this file and rename Makefile.legacy to Makefile,
+###  or modify the all/clean/install targets below  ) 
+###
 
 
-ifdef ANITA_UTIL_INSTALL_DIR
-ANITA_UTIL_LIB_DIR=${ANITA_UTIL_INSTALL_DIR}/lib
-ANITA_UTIL_INC_DIR=${ANITA_UTIL_INSTALL_DIR}/include
-ANITA_UTIL_BIN_DIR=${ANITA_UTIL_INSTALL_DIR}/bin
-LD_ANITA_UTIL=-L$(ANITA_UTIL_LIB_DIR)
-INC_ANITA_UTIL=-I$(ANITA_UTIL_INC_DIR)
-ANITA_UTIL_MAP_DIR=$(ANITA_UTIL_INSTALL_DIR)/share/anitaMap
-else
-ANITA_UTIL_LIB_DIR=/usr/local/lib
-ANITA_UTIL_INC_DIR=/usr/local/include
-ANITA_UTIL_MAP_DIR=/usr/local/share/anitaMap
-ANITA_UTIL_BIN_DIR=/usr/local/bin
-ifdef EVENT_READER_DIR
-LD_ANITA_UTIL=-L$(EVENT_READER_DIR)
-INC_ANITA_UTIL=-I$(EVENT_READER_DIR)
-endif
-endif
+.PHONY: all configure clean cleaner install legacy legacy-clean legacy-install cmake-build cmake-clean cmake-install
+
+all: cmake-build 
+clean: cmake-clean
+install: cmake-install 
 
 
-AWARE_INCLUDES = -I../
-AWARE_LIBS = -L../ -l AwareWeb
+### TODO add doxygen into CMakelists 
+doc: legacy-doc
 
-#Generic and Site Specific Flags
-CXXFLAGS     += $(ROOTCFLAGS) $(FFTFLAG) $(SYSINCLUDES) $(AWARE_INCLUDES) $(INC_ANITA_UTIL)
-LDFLAGS      += -g $(ROOTLDFLAGS) 
+cmake-build: build/Makefile 
+	@make -C  ./build
 
-LIBS          = $(ROOTLIBS)  -lMinuit $(SYSLIBS)  $(LD_ANITA_UTIL) -lAnitaEvent $(FFTLIBS) $(AWARE_LIBS)
-GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
+legacy-doc: 
+	@make -f Makefile.legacy doc 
 
+legacy: 
+	@make -f Makefile.legacy 
 
+legacy-clean: 
+	@make -f Makefile.legacy clean 
 
-#Now the bits we're actually compiling
-ROOT_LIBRARY = libAnitaAware.${DLLSUF}
-LIB_OBJS =  AnitaAwareHandler.o
-CLASS_HEADERS =  AnitaAwareHandler.h 
+legacy-install: 
+	@make -f Makefile.legacy install 
 
+configure: build/Makefile 
+	@ccmake . build 
 
+cmake-install: 
+	@make -C ./build install 
 
-PROGRAM = makeHkJsonFiles makeSSHkJsonFiles makeHeaderJsonFiles makeEventJsonFiles makeAcqdStartRunJsonFiles makeMonitorHkJsonFiles makeOtherMonitorHkJsonFiles makeSurfHkJsonFiles makeAdu5PatJsonFiles makeAdu5SatJsonFiles makeAdu5VtgJsonFiles makeG12PosJsonFiles makeG12SatJsonFiles makeGpsGgaJsonFiles makeAvgSurfHkJsonFiles makeTurfRateJsonFiles makeSumTurfRateJsonFiles makeWaveformSummaryJsonFiles makeSlowRateHkJsonFiles makeGpuSourceJsonFiles addRunToMapFile
+build/Makefile: 
+	@echo "Setting up cmake build. Use "make legacy" to use legacy Makefile" 
+	@mkdir -p build 
+	@cd build && cmake ../ 
 
+distclean: 
+	@echo "Removing cmake directory" 
+	@rm -rf build 
 
-
-all : $(PROGRAM) $(ROOT_LIBRARY)
-
-$(ROOT_LIBRARY) : $(LIB_OBJS) 
-	@echo "Linking $@ ..."
-ifeq ($(PLATFORM),macosx)
-# We need to make both the .dylib and the .so
-		$(LD) $(SOFLAGS)$@ $(LDFLAGS) $^ $(OutPutOpt) $@
-ifneq ($(subst $(MACOSX_MINOR),,1234),1234)
-ifeq ($(MACOSX_MINOR),4)
-		ln -sf $@ $(subst .$(DllSuf),.so,$@)
-else
-		$(LD) -bundle -undefined $(UNDEFOPT) $(LDFLAGS) $^ \
-		   $(OutPutOpt) $(subst .$(DllSuf),.so,$@)
-endif
-endif
-else
-	$(LD) $(SOFLAGS) $(LDFLAGS)  $(LIB_OBJS) -o $@ $(LIBS)
-endif
-
-
-
-
-% :  %.$(SRCSUF) $(ROOT_LIBRARY)
-	@echo "<**Linking**> "  
-	$(LD)  $(CXXFLAGS) $(LDFLAGS)  $<  $(LIBS) $(ROOT_LIBRARY) -o $@
-
-
-%.$(OBJSUF) : %.$(SRCSUF)
-	@echo "<**Compiling**> "$<
-	$(CXX) $(CXXFLAGS) -c $< -o  $@
-
-
-install: $(ROOT_LIBRARY)
-ifeq ($(PLATFORM),macosx)
-	cp $(ROOT_LIBRARY) $(subst .$(DLLSUF),.so,$(ROOT_LIBRARY)) $(ANITA_UTIL_LIB_DIR)
-else
-	cp $(ROOT_LIBRARY) $(ANITA_UTIL_LIB_DIR)
-endif
-	cp  $(CLASS_HEADERS) $(ANITA_UTIL_INC_DIR)
-	install -d $(ANITA_UTIL_BIN_DIR)
-	install -c -m 755 $(PROGRAM) $(ANITA_UTIL_BIN_DIR)
-
-
-clean:
-	@rm -f *Dict*
-	@rm -f *.${OBJSUF}
-	@rm -f $(PROGRAM)
-
-
+cmake-clean: build/Makefile 
+	@make -C ./build clean 

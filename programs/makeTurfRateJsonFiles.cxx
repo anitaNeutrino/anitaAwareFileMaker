@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA4");
 
 
-  char polString[2]={'V','H'};
+  //  char polString[2]={'V','H'};
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -114,73 +114,48 @@ int main(int argc, char **argv) {
 
 
     for( int phi=0; phi<PHI_SECTORS; ++phi ) {
-      for( int pol=0; pol<2; ++pol ) {
-	sprintf(elementName,"l1Rates%d_%c",phi,polString[pol]);
-	sprintf(elementLabel,"L1 Rates %d-%c",phi+1,polString[pol]);      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l1Rates[phi][pol]);
-      }      
+      //      for( int pol=0; pol<2; ++pol ) {
+	sprintf(elementName,"l2Rates%d",phi);
+	sprintf(elementLabel,"L2 Rates %d",phi+1);      
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l2Rates[phi]);
+	//      }      
     }
 
     for( int phi=0; phi<PHI_SECTORS; ++phi ) {
-      int pol=0;
-      sprintf(elementName,"l3Rates%d_%c",phi,polString[pol]);
-      sprintf(elementLabel,"L3 Rates %d-%c",phi+1,polString[pol]);      
+      //      int pol=0;
+      sprintf(elementName,"l3Rates%d",phi);//,polString[pol]);
+      sprintf(elementLabel,"L3 Rates %d",phi+1);//,polString[pol]);      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l3Rates[phi]);
-      pol=1;
-      sprintf(elementName,"l3Rates%d_%c",phi,polString[pol]);
-      sprintf(elementLabel,"L3 Rates %d-%c",phi+1,polString[pol]);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->l3RatesH[phi]);
-         
     }
 
 
 
-   int numPhiMaskV=0;
-   int numPhiMaskH=0;
-   int numL1MaskV=0;
-   int numL1MaskH=0;
+   int numPhiMask=0;
+   int numL2Mask=0;
 
    for(int bit=0;bit<16;bit++) {
       sprintf(elementName,"phiTrigMask%d",bit);
-      sprintf(elementLabel,"Phi Mask VPol %d",bit+1);
+      sprintf(elementLabel,"Phi Mask %d",bit+1);
       int value=(bit+1)*turfRatePtr->isPhiMasked(bit);
-      if(value)numPhiMaskV++;
+      if(value)numPhiMask++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"phiTrigMaskH%d",bit);
-      sprintf(elementLabel,"Phi Mask HPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isPhiMaskedHPol(bit);
-      if(value)numPhiMaskH++;
+      sprintf(elementName,"l2TrigMask%d",bit);
+      sprintf(elementLabel,"L2 Mask %d",bit+1);
+      value=(bit+1)*turfRatePtr->isL2Masked(bit);
+      if(value)numL2Mask++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"l1TrigMask%d",bit);
-      sprintf(elementLabel,"L1 Mask VPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isL1Masked(bit);
-      if(value)numL1MaskV++;
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"l1TrigMaskH%d",bit);
-      sprintf(elementLabel,"L1 Mask HPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isL1MaskedHPol(bit);
-      if(value)numL1MaskH++;
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
    }
+  
 
-   sprintf(elementName,"numPhiMaskH");
-   sprintf(elementLabel,"Num Phi H-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskH);  
+   sprintf(elementName,"numPhiMask");
+   sprintf(elementLabel,"Num Phi Masked");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMask);  
 
-   sprintf(elementName,"numPhiMaskV");
-   sprintf(elementLabel,"Num Phi V-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskV);  
-
-   sprintf(elementName,"numL1MaskH");
-   sprintf(elementLabel,"Num L1 H-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskH);  
-
-   sprintf(elementName,"numL1MaskV");
-   sprintf(elementLabel,"Num L1 V-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskV);  
+   sprintf(elementName,"numL2Mask");
+   sprintf(elementLabel,"Num L2 Masked");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL2Mask);  
 
 
   }

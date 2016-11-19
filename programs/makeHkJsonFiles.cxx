@@ -171,7 +171,7 @@ int main(int argc, char **argv) {
     }
 
 
-    const char *ssNames[4]={"SS1A","SS2A","SS3A","SS4A"};
+    const char *ssNames[4]={"SS-1","SS-2","SS-3","SS-4"};
     const char *rawSSNames[5]={"x1","x2","y1","y2","T"};
     for( int i=0; i<4; ++i ) {
       for(int j=0;j<5;j++) {       

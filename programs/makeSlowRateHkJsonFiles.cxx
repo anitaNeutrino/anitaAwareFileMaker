@@ -85,6 +85,7 @@ int main(int argc, char **argv) {
   int phi;
   AnitaRing::AnitaRing_t ring;
   AnitaPol::AnitaPol_t pol;
+  AnitaTrigPol::AnitaTrigPol_t trigPol;
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -154,9 +155,9 @@ int main(int argc, char **argv) {
 
     for( int surf=0; surf<TRIGGER_SURFS; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
-	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf+2,chan,phi,ring,pol);
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf+2,chan,phi,ring,trigPol);
 	sprintf(elementName,"scaler%d_%d",surf+2,chan);
-	sprintf(elementLabel,"%d-%d  %d%c%c",surf+3,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
+	sprintf(elementLabel,"%d-%d  %d%c%c",surf+3,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,slowPtr->getAvgScaler(surf,chan));
       }      
     }

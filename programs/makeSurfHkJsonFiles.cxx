@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
   int phi;
   AnitaRing::AnitaRing_t ring;
   AnitaPol::AnitaPol_t pol;
+  AnitaTrigPol::AnitaTrigPol_t trigPol;
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -106,24 +107,24 @@ int main(int argc, char **argv) {
     char elementLabel[180];
     for( int surf=2; surf<10; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
-	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,trigPol);
 	sprintf(elementName,"scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
+	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
 
-	sprintf(elementName,"phiScaler%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
-	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
+	sprintf(elementName,"phiScaler%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));
+	sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
       }   
       
       for(int l1Chan=0;l1Chan<4;l1Chan++) {
-	AnitaGeomTool::getPhiPolFromSurfL1Chan(surf,l1Chan,phi,pol);
+	AnitaGeomTool::getPhiRingFromSurfL1Chan(surf,l1Chan,phi,ring);
 	sprintf(elementName,"l1Scaler%d_%d",surf,l1Chan);
-	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaPol::polAsChar(pol));      
+	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);
 
-	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaPol::polAsChar(pol));
-	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaPol::polAsChar(pol));      
+	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
+	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);  
       }
     }
@@ -139,14 +140,14 @@ int main(int argc, char **argv) {
 
     for( int surf=2; surf<10; ++surf ) {
       for( int chan=0; chan<SCALERS_PER_SURF; ++chan ) {
-	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,pol);
+	AnitaGeomTool::getPhiRingPolFromSurfChanTrigger(surf,chan,phi,ring,trigPol);
 	sprintf(elementName,"threshold%d_%d",surf,chan);
-	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
 
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
-	sprintf(elementName,"phiThreshold%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));
-	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaPol::polAsChar(pol));      
+	sprintf(elementName,"phiThreshold%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));
+	sprintf(elementLabel,"%d-%d %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->threshold[surf][chan]);
       }      
     }

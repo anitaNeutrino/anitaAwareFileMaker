@@ -82,7 +82,6 @@ int main(int argc, char **argv) {
   sprintf(instrumentName,"ANITA4");
 
 
-  char polString[2]={'V','H'};
 
   //  numEntries=1;
   for(Long64_t event=0;event<numEntries;event++) {
@@ -117,63 +116,41 @@ int main(int argc, char **argv) {
 
 
     for( int phi=0; phi<PHI_SECTORS; ++phi ) {
-      AnitaPol::AnitaPol_t pol=AnitaPol::kVertical;
-      sprintf(elementName,"l3Rates%c_%d",AnitaPol::polAsChar(pol),phi);
-      sprintf(elementLabel,"%d-%c",phi+1,AnitaPol::polAsChar(pol));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->getL3Rate(phi,pol));
-      pol=AnitaPol::kHorizontal;
-      sprintf(elementName,"l3Rates%c_%d",AnitaPol::polAsChar(pol),phi);
-      sprintf(elementLabel,"%d-%c",phi+1,AnitaPol::polAsChar(pol));      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->getL3Rate(phi,pol));         
+      sprintf(elementName,"l3Rates_%d",phi);
+      sprintf(elementLabel,"%d",phi+1);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->getL3Rate(phi));
+      sprintf(elementName,"l3Rates_%d",phi);
+      sprintf(elementLabel,"%d",phi+1);
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,turfRatePtr->getL3Rate(phi));         
     }
 
 
-   int numPhiMaskV=0;
-   int numPhiMaskH=0;
-   int numL1MaskV=0;
-   int numL1MaskH=0;
+   int numPhiMask=0;
+   int numL2Mask=0;
+
    for(int bit=0;bit<16;bit++) {
       sprintf(elementName,"phiTrigMask%d",bit);
-      sprintf(elementLabel,"Phi Mask VPol %d",bit+1);
-      int value=(bit+1)*turfRatePtr->isPhiMasked(bit,AnitaPol::kVertical);
-      if(value>0) numPhiMaskV++;
+      sprintf(elementLabel,"Phi Mask %d",bit+1);
+      int value=(bit+1)*turfRatePtr->isPhiMasked(bit);
+      if(value>0) numPhiMask++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"phiTrigMaskH%d",bit);
-      sprintf(elementLabel,"Phi Mask HPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isPhiMasked(bit,AnitaPol::kHorizontal);
-      if(value>0) numPhiMaskH++;
+      sprintf(elementName,"l2TrigMask%d",bit);
+      sprintf(elementLabel,"L2 Mask  %d",bit+1);
+      value=(bit+1)*turfRatePtr->isL2Masked(bit);
+      if(value)numL2Mask++;
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
 
-      sprintf(elementName,"l1TrigMask%d",bit);
-      sprintf(elementLabel,"L1 Mask VPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isL1Masked(bit,AnitaPol::kVertical);
-      if(value)numL1MaskV++;
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
-
-      sprintf(elementName,"l1TrigMaskH%d",bit);
-      sprintf(elementLabel,"L1 Mask HPol %d",bit+1);
-      value=(bit+1)*turfRatePtr->isL1Masked(bit,AnitaPol::kHorizontal);
-      if(value)numL1MaskH++;
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,value);
    }
 
 
-   sprintf(elementName,"numPhiMaskH");
-   sprintf(elementLabel,"Num Phi H-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskH);  
+   sprintf(elementName,"numPhiMask");
+   sprintf(elementLabel,"Num Phi");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMask); 
 
-   sprintf(elementName,"numPhiMaskV");
-   sprintf(elementLabel,"Num Phi V-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numPhiMaskV); 
-
-   sprintf(elementName,"numL1MaskH");
-   sprintf(elementLabel,"Num L1 H-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskH);  
-
-   sprintf(elementName,"numL1MaskV");
-   sprintf(elementLabel,"Num L1 V-Pol");
-   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL1MaskV);  
+   sprintf(elementName,"numL2Mask");
+   sprintf(elementLabel,"Num L2");
+   summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,numL2Mask);  
 
 
   }

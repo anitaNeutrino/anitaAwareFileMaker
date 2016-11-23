@@ -19,41 +19,41 @@ cd $ANITA_AWARE_FILEMAKER_DIR
 if [ -d "$ROOT_RUN_DIR" ]; then
     echo "Header"
     echo "=========================================="
-    ./makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
+    makeHeaderJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root 
     echo "Hk"
     echo "=========================================="
-    ./makeHkJsonFiles ${ROOT_RUN_DIR}/hkFile${RUN}.root  
-    ./makeSSHkJsonFiles ${ROOT_RUN_DIR}/sshkFile${RUN}.root  
+    makeHkJsonFiles ${ROOT_RUN_DIR}/hkFile${RUN}.root  
+    makeSSHkJsonFiles ${ROOT_RUN_DIR}/sshkFile${RUN}.root  
     echo "SURF Hk"
     echo "=========================================="
-    ./makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root
+    makeSurfHkJsonFiles ${ROOT_RUN_DIR}/surfHkFile${RUN}.root
     echo "Avg. SURF Hk"
     echo "=========================================="
-    ./makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
+    makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
     echo "TURF Rate"
     echo "=========================================="
-    ./makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
+    makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
     echo "Acqd"
     echo "=========================================="
-    ./makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     
+    makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     
     echo "Monitor"
     echo "=========================================="
-    ./makeMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root     
+    makeMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root     
     echo "Other"
     echo "=========================================="
-    ./makeOtherMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root 
+    makeOtherMonitorHkJsonFiles ${ROOT_RUN_DIR}/monitorFile${RUN}.root 
     echo "GPS"
     echo "=========================================="
-    ./makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
-    ./makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
-    ./makeAdu5SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
-    ./makeAdu5SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
-    ./makeAdu5VtgJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
-    ./makeAdu5VtgJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
-    ./makeG12PosJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root
-    ./makeG12SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root
-    ./makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
-    ./makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
-    ./makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 2
-#    ./makeEventJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root ${ROOT_RUN_DIR}/eventFile${RUN}.root  &
+    makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
+    makeAdu5PatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
+    makeAdu5SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
+    makeAdu5SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
+    makeAdu5VtgJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
+    makeAdu5VtgJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
+    makeG12PosJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root
+    makeG12SatJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root
+    makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
+    makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
+    makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 2
+#    makeEventJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root ${ROOT_RUN_DIR}/eventFile${RUN}.root  &
 fi

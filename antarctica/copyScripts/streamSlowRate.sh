@@ -9,8 +9,8 @@
 
 TDRSS_DIR=/data/ldb2016/telem/slow_tdrss
 IRIDIUM_DIR=/data/ldb2016/telem/iridium
-TDRSS_HOST=anitaxfer
-#TDRSS_HOST=tdrss1
+#TDRSS_HOST=anitaxfer
+TDRSS_HOST=tdrss1
 
 echo "PID = $$"
 echo $$ > /tmp/pidSlowCopy

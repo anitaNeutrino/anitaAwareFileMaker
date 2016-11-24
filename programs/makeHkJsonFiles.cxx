@@ -171,12 +171,12 @@ int main(int argc, char **argv) {
     }
 
 
-    const char *ssNames[4]={"SS-1","SS-2","SS-3","SS-4"};
+    //    const char *ssNames[4]={"SS-1","SS-2","SS-3","SS-4"};
     const char *rawSSNames[5]={"x1","x2","y1","y2","T"};
     for( int i=0; i<4; ++i ) {
       for(int j=0;j<5;j++) {       
 	sprintf(elementName,"rawSS_%d_%d",i,j);
-	sprintf(elementLabel,"%s - %s",ssNames[i],rawSSNames[j]);
+	sprintf(elementLabel,"%s - %s",hkPtr->getSSName(i),rawSSNames[j]);
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getRawSunsensor(i,j));
       }
     
@@ -186,18 +186,18 @@ int main(int argc, char **argv) {
       Float_t magY=0;
       hkPtr->getSSMagnitude(i,&mag,&magX,&magY);
       sprintf(elementName,"ssMag_%d",i);
-      sprintf(elementLabel,"ssMag %s",ssNames[i]);      
+      sprintf(elementLabel,"ssMag %s",hkPtr->getSSName(i));      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,mag);
       sprintf(elementName,"ssMagX_%d",i);
-      sprintf(elementLabel,"ssMagX %s",ssNames[i]);      
+      sprintf(elementLabel,"ssMagX %s",hkPtr->getSSName(i));      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,magX);
       sprintf(elementName,"ssMagY_%d",i);
-      sprintf(elementLabel,"ssMagY %s",ssNames[i]);      
+      sprintf(elementLabel,"ssMagY %s",hkPtr->getSSName(i));      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,magY);
 
       Float_t temp=hkPtr->getSSTemp(i);
       sprintf(elementName,"ssTemp_%d",i);
-      sprintf(elementLabel,"ssTemp %s",ssNames[i]);      
+      sprintf(elementLabel,"ssTemp %s",hkPtr->getSSName(i));      
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,temp);
 
       Float_t ssPos[3]={0};
@@ -207,7 +207,7 @@ int main(int argc, char **argv) {
       Int_t goodFlag=hkPtr->getFancySS(i,ssPos,&ssAzimuth,&ssElevation,&ssRelElevation);
 
       sprintf(elementName,"ssElevation%d",i);
-      strcpy(elementLabel,ssNames[i]);       
+      strcpy(elementLabel,hkPtr->getSSName(i));       
       if(goodFlag)
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssElevation,AwareAverageType::kDefault,kTRUE,-999);
        else
@@ -215,21 +215,21 @@ int main(int argc, char **argv) {
        
               
        sprintf(elementName,"ssAzimuthRaw%d",i);
-       strcpy(elementLabel,ssNames[i]);
+       strcpy(elementLabel,hkPtr->getSSName(i));
        if(goodFlag)
 	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssAzimuth,AwareAverageType::kDefault,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
        
        sprintf(elementName,"ssAzimuthAdu5%d",i);
-       strcpy(elementLabel,ssNames[i]);
+       strcpy(elementLabel,hkPtr->getSSName(i));
        if(goodFlag)
 	 summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,ssRelElevation,AwareAverageType::kAngleDegree,kTRUE,-999);
        else
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kAngleDegree,kTRUE,-999);
        
        sprintf(elementName,"ssGoodFlag%d",i);
-       strcpy(elementLabel,ssNames[i]);
+       strcpy(elementLabel,hkPtr->getSSName(i));
        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,goodFlag);
     }       
     

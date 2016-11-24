@@ -7,8 +7,8 @@
 # to the remote machines .ssh/authorized_keys
 
 TDRSS_DIR=/data/ldb2016/telem/fast_tdrss
-TDRSS_HOST=anitaxfer
-#TDRSS_HOST=tdrss1
+#TDRSS_HOST=anitaxfer
+TDRSS_HOST=tdrss1
 
 
 echo "PID = $$"

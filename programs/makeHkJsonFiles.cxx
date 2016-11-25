@@ -120,8 +120,6 @@ int main(int argc, char **argv) {
       sprintf(elementName,"ntuTemps%d",i);
       strcpy(elementLabel,CalibratedHk::getNTUTempName(i));
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getNTUTemp(i));
-
-
     }
 
     for( int i=0; i<NUM_EXT_TEMPS; ++i ) {

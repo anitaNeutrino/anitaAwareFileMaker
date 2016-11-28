@@ -32,7 +32,10 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
     echo "TURF Rate"
     echo "=========================================="
-    makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
+    makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root
+    echo "Summed TURF Rate"
+    echo "=========================================="
+    makeSumTurfRateJsonFiles ${ROOT_RUN_DIR}/sumTurfRateFile${RUN}.root    
     echo "Acqd"
     echo "=========================================="
     makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     

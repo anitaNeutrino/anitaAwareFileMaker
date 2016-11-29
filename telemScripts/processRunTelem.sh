@@ -6,7 +6,6 @@ then
 fi
 
 
-
 RUN=$1
 BASE_DIR=${ANITA_TELEM_DATA_DIR}
 RAW_RUN_DIR=${BASE_DIR}/raw/run${RUN}
@@ -14,7 +13,7 @@ EVENT_BASE_DIR=${BASE_DIR}/root
 ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 
 #Generate the AWARE Files
-cd $ANITA_AWARE_FILEMAKER_DIR
+#cd $ANITA_AWARE_FILEMAKER_DIR
 
 if [ -d "$ROOT_RUN_DIR" ]; then
     echo "Header"

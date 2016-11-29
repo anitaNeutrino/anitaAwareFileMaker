@@ -21,6 +21,7 @@ export PYTHONPATH=${AWARE_BASE_DIR}/python/
 
 #Step 2: Deal with the config files
 for configFile in ${RAW_CONFIG_DIR}/*.config; do
+    test -f "$configFile" || continue
     python ./processConfig.py -i $configFile -r $RUN
 done
 

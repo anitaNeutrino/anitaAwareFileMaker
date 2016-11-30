@@ -12,7 +12,7 @@ echo $$ > /tmp/pidLOSCopy
 
 
 
-LOS_DIR=/data/ldb2016/telem/raw_los
+LOS_DIR=/data/flight1617/telem/raw_los
 LOS_HOST=anitaxfer
 
 while [ 1 ] ; do

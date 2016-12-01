@@ -57,5 +57,10 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 0
     makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 1
     makeGpsGgaJsonFiles ${ROOT_RUN_DIR}/gpsFile${RUN}.root 2
+
+    echo "TUFF" 
+    echo "==========================================" 
+    makeTuffStatusJsonFiles ${ROOT_RUN_DIR}/tuffStatusFile${RUN}.root 
+
 #    makeEventJsonFiles ${ROOT_RUN_DIR}/headFile${RUN}.root ${ROOT_RUN_DIR}/eventFile${RUN}.root  &
 fi

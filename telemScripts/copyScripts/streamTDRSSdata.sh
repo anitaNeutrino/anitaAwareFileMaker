@@ -6,7 +6,7 @@
 # i.e. we must have used ssh-copy-id to copy this machines public ssh key
 # to the remote machines .ssh/authorized_keys
 
-TDRSS_DIR=/data/ldb2016/telem/fast_tdrss
+TDRSS_DIR=/data/flight1617/telem/fast_tdrss
 #TDRSS_HOST=anitaxfer
 TDRSS_HOST=tdrss1
 

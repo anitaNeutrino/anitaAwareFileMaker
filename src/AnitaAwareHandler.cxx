@@ -104,7 +104,7 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
    
 
    int numPhiMask=0;
-   int numL1Mask=0;
+   int numL2Mask=0;
    int numL3Trig=0;
 
 
@@ -116,10 +116,10 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
       
       
-      sprintf(elementName,"L1TrigMask%d",bit);
-      sprintf(elementLabel,"L1 %d",bit+1);
-      value=(bit+1)*hdPtr->isInL1Mask(bit);
-      if(value) numL1Mask++;
+      sprintf(elementName,"l2TrigMask%d",bit);
+      sprintf(elementLabel,"L2 %d",bit+1);
+      value=(bit+1)*hdPtr->isInL2Mask(bit);
+      if(value) numL2Mask++;
       fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
 
       sprintf(elementName,"PhiTrigMask%d",bit);
@@ -133,9 +133,9 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
    sprintf(elementLabel,"Num Phi");
    fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numPhiMask);  
 
-   sprintf(elementName,"numL1Mask");
-   sprintf(elementLabel,"Num L1");
-   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL1Mask);  
+   sprintf(elementName,"numL2Mask");
+   sprintf(elementLabel,"Num L2");
+   fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,numL2Mask);  
 
    sprintf(elementName,"numL3Trig");
    sprintf(elementLabel,"Num L3");

@@ -6,7 +6,6 @@ then
 fi
 
 
-
 RUN=$1
 BASE_DIR=${ANITA_TELEM_DATA_DIR}
 RAW_RUN_DIR=${BASE_DIR}/raw/run${RUN}
@@ -14,7 +13,7 @@ EVENT_BASE_DIR=${BASE_DIR}/root
 ROOT_RUN_DIR=${EVENT_BASE_DIR}/run${RUN}
 
 #Generate the AWARE Files
-cd $ANITA_AWARE_FILEMAKER_DIR
+#cd $ANITA_AWARE_FILEMAKER_DIR
 
 if [ -d "$ROOT_RUN_DIR" ]; then
     echo "Header"
@@ -32,7 +31,10 @@ if [ -d "$ROOT_RUN_DIR" ]; then
     makeAvgSurfHkJsonFiles ${ROOT_RUN_DIR}/avgSurfHkFile${RUN}.root    
     echo "TURF Rate"
     echo "=========================================="
-    makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root    
+    makeTurfRateJsonFiles ${ROOT_RUN_DIR}/turfRateFile${RUN}.root
+    echo "Summed TURF Rate"
+    echo "=========================================="
+    makeSumTurfRateJsonFiles ${ROOT_RUN_DIR}/sumTurfRateFile${RUN}.root    
     echo "Acqd"
     echo "=========================================="
     makeAcqdStartRunJsonFiles ${ROOT_RUN_DIR}/auxFile${RUN}.root     

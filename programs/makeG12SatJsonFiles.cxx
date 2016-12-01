@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 	sprintf(elementName,"snr_%d",whichSat+1);
 	sprintf(elementLabel,"SNR %d",whichSat+1);      
 	if(goodSat) summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,g12SatPtr->snr[whichSat],AwareAverageType::kDefault,kTRUE,-999);
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
+	else summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,-999,AwareAverageType::kDefault,kTRUE,-999);
 		
 	sprintf(elementName,"flag_%d",whichSat+1);
 	sprintf(elementLabel,"Flag %d",whichSat+1);      

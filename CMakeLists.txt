@@ -103,6 +103,7 @@ message("DICTNAME is set to ${DICTNAME}" )
 message("PROJECT_BINARY_DIR is set to ${PROJECT_BINARY_DIR}")
 
 add_subdirectory(programs)
+add_subdirectory(telemScripts)
 
 
 install (FILES ${HEADER_FILES} DESTINATION ${UTIL_INC_DIR})

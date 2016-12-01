@@ -1,5 +1,5 @@
 #!/bin/bash
-OPENPORT_DIR=/data/palestine2016/telem/openport
+OPENPORT_DIR=/data/flight1617/telem/openport
 
 echo "PID = $$"
 echo $$ > /tmp/pidOpenportCopy

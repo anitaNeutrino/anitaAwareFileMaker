@@ -95,12 +95,22 @@ int main(int argc, char **argv) {
     char elementLabel[512]; 
 
     for( int i=0; i<NUM_TUFF_NOTCHES; ++i ) {
-      sprintf(elementName,"notch%dstart",i);
+      sprintf(elementName,"notch_%dstart",i);
       sprintf(elementLabel,"Notch %d start phi sector (1-16, or 0 if disabled)", i);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,tuffPtr->getStartSector(i) + 1);
-      sprintf(elementName,"notch%dstop",i);
+      sprintf(elementName,"notch_%dstop",i);
       sprintf(elementLabel,"Notch %d stop phi sector (1-16, or 0 if disabled)",i);
       summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,tuffPtr->getEndSector(i) + 1);
+
+      for (int j = 0; j < NUM_PHI; j++)
+      {
+        
+        sprintf(elementName,"correctphinotch%d_%d", i, j+1); 
+        sprintf(elementLabel,"Phi %d  Notch %d On", j+1, i); 
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,(j+1) * ((tuffPtr->getNotchedSectors(i) & (1 << j) ) > 0)   );
+      }
+
+
     }
 
     for( int i=0; i<NUM_RFCM; ++i ) 
@@ -154,7 +164,7 @@ int main(int argc, char **argv) {
   summaryFile.writeTimeJSONFile(outName);
 
 
-  sprintf(outName,"%s/%s/lasttuff",outputDir,instrumentName);
+  sprintf(outName,"%s/%s/lastTuff",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);
   sprintf(outName,"%s/%s/lastRun",outputDir,instrumentName);
   AwareRunDatabase::updateTouchFile(outName,runNumber,lastTime);

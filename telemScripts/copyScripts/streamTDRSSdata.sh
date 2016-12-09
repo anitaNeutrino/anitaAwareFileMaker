@@ -21,5 +21,5 @@ while [ 1 ] ; do
     echo $CURRENT_RUN 
     rsync -avz ${TDRSS_HOST}:/data/anita/fast_tdrss/${CURRENT_RUN} $TDRSS_DIR > /tmp/lastStreamTDRSS 2>&1
 
-    sleep 10
+    sleep 120
 done

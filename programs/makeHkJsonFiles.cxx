@@ -67,6 +67,7 @@ int main(int argc, char **argv) {
   TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t lastTime=timeStamp.GetSec();
+  Long64_t lastEntry=0;
   UInt_t runNumber=hkPtr->run;
   std::cout << hkPtr->run << "\t" << hkPtr->realTime << "\n";
 
@@ -98,7 +99,10 @@ int main(int argc, char **argv) {
     
     TTimeStamp timeStamp((time_t)hkPtr->realTime,(Int_t)0);
     //    std::cout << "Run: "<< hkPtr->run << "\n";
-    if(lastTime<hkPtr->realTime)    lastTime=hkPtr->realTime;
+    if(lastTime<hkPtr->realTime)    {
+      lastTime=hkPtr->realTime;
+      lastEntry=event;
+    }
 
     //    std::cout  << timeStamp.AsString("sl") << "\n";
     //Summary file fun
@@ -282,4 +286,17 @@ int main(int argc, char **argv) {
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);
   AwareRunDatabase::updateDateList(outputDir,instrumentName,runNumber,dateInt);
+
+
+  char statusPage[FILENAME_MAX];
+  sprintf(statusPage,"%s/%s/statusPage/hkStatus.json",outputDir,instrumentName);
+  
+  //Now update status page
+  hkTree->GetEntry(lastEntry);
+  //Now hkPtr is a pointed to the most recent CalibratedHk
+
+  //For example hkPtr->getPower(0) is the zeroth power
+  
+  
+  
 }

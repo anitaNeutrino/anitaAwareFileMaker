@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
       
       sprintf(elementName,"phiL2Scaler%d",phi+1);
       sprintf(elementLabel,"%d-%d  %d",surf+1,l2Chan+1,phi+1);      
-      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL2Scaler(phi););  
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL2Scaler(phi));  
     }
 
   

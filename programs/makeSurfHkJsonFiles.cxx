@@ -117,17 +117,35 @@ int main(int argc, char **argv) {
 	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->scaler[surf][chan]);
       }   
       
-      for(int l1Chan=0;l1Chan<4;l1Chan++) {
-	AnitaGeomTool::getPhiRingFromSurfL1Chan(surf,l1Chan,phi,ring);
+    }
+    for(int phi=0;phi<PHI_SECTORS;phi++) {
+      for(int iring=0;iring<3;iring++) {
+	int l1Chan=0,surf=0;
+	ring=(AnitaRing::AnitaRing_t)iring;
+	AnitaGeomTool::getSurfL1TriggerChanFromPhiRing(phi,ring,surf,l1Chan);
 	sprintf(elementName,"l1Scaler%d_%d",surf,l1Chan);
 	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL1Scaler(phi,ring));
 
 	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
 	sprintf(elementLabel,"%d-%d  %d-%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->l1Scaler[surf][l1Chan]);  
+	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL1Scaler(phi,ring));  
       }
+           
+      
+      int l2Chan=0,surf=0;
+      AnitaGeomTool::getSurfL2TriggerChanFromPhi(phi,surf,l2Chan);
+      
+      sprintf(elementName,"l2Scaler%d_%d",surf,l2Chan);
+      sprintf(elementLabel,"%d-%d  %d",surf+1,l2Chan+1,phi+1);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL2Scaler(phi));
+      
+      sprintf(elementName,"phiL2Scaler%d",phi+1);
+      sprintf(elementLabel,"%d-%d  %d",surf+1,l2Chan+1,phi+1);      
+      summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,surfHkPtr->getL2Scaler(phi););  
     }
+
+  
     
 
     // for( int surf=0; surf<ACTIVE_SURFS; ++surf ) {

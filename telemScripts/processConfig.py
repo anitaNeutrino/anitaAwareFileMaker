@@ -48,13 +48,18 @@ def main(argv):
     myConfig=PyConfigLib.ConfigFile(configBase)
     myConfig.readFile(inputfilename)
     jsonObj=PyJSONSerialization.dump(myConfig)
+
+    stinfo = os.stat(inputfilename)
+#    print stinfo
+
     
     f=open(outFile,"w")
     f.write(jsonObj)
     f.write("\n")
     f.close()
+ 
 
-
+    os.utime(outFile,(stinfo.st_atime, stinfo.st_mtime))
 
 
 if __name__ == "__main__":

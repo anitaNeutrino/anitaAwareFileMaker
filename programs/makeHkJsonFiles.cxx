@@ -290,6 +290,8 @@ int main(int argc, char **argv) {
 
 
   char statusPage[FILENAME_MAX];
+  sprintf(statusPage,"%s/%s/statusPage",outputDir,instrumentName);
+  gSystem->mkdir(statusPage,kTRUE);
   sprintf(statusPage,"%s/%s/statusPage/hkStatus.json.gz",outputDir,instrumentName);
   
   

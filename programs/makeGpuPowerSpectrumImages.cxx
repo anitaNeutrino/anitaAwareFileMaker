@@ -83,10 +83,9 @@ int main(int nargs, char ** args)
 
     if (entry_within_run > last) 
     {
-      TCanvas c("gpu","gpu",1024,800); 
-
-      TPad ptop("ptop","top part", 0,0.8,1.0,1.0); 
-      TPad pbot("pbot","bottom part",0,0.0,1.0,0.8); 
+      TCanvas c("gpu","gpu",2048,1600); 
+      TPad ptop("ptop","top part", 0,0.85,1.0,1.0); 
+      TPad pbot("pbot","bottom part",0,0.0,1.0,0.85); 
       ptop.Draw(); 
       ptop.cd(); 
       TTimeStamp ts(gpu->unixTimeFirstEvent); 
@@ -109,7 +108,7 @@ int main(int nargs, char ** args)
         pbot.cd(j+1); 
         if (g[j]) delete g[j]; 
         g[j] = gpu->getGraph(j); 
-        g[j]->SetTitle(TString::Format("Phi Sectord %d",j+1)); 
+        g[j]->SetTitle(TString::Format("Phi Sector %d",j+1)); 
         g[j]->GetXaxis()->SetTitle("Frequency");
         g[j]->GetYaxis()->SetTitle("dB + random offset");
         g[j]->SetLineWidth(2); 

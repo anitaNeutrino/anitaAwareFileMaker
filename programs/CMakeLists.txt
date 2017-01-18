@@ -3,7 +3,7 @@
 
 
 
-foreach(loop_prog addRunToMapFile               makeG12PosJsonFiles           makeOtherMonitorHkJsonFiles makeAcqdStartRunJsonFiles     makeG12SatJsonFiles           makeSSHkJsonFiles makeAdu5PatJsonFiles          makeGpsGgaJsonFiles           makeSlowRateHkJsonFiles makeAdu5SatJsonFiles          makeGpuSourceJsonFiles        makeSumTurfRateJsonFiles makeAdu5VtgJsonFiles          makeHeaderJsonFiles           makeSurfHkJsonFiles makeAvgSurfHkJsonFiles        makeHkJsonFiles               makeTurfRateJsonFiles makeEventJsonFiles            makeMonitorHkJsonFiles        makeWaveformSummaryJsonFiles makeTuffStatusJsonFiles #makeGpuPowerSpectrumJsonFiles
+foreach(loop_prog addRunToMapFile               makeG12PosJsonFiles           makeOtherMonitorHkJsonFiles makeAcqdStartRunJsonFiles     makeG12SatJsonFiles           makeSSHkJsonFiles makeAdu5PatJsonFiles          makeGpsGgaJsonFiles           makeSlowRateHkJsonFiles makeAdu5SatJsonFiles          makeGpuSourceJsonFiles        makeSumTurfRateJsonFiles makeAdu5VtgJsonFiles          makeHeaderJsonFiles           makeSurfHkJsonFiles makeAvgSurfHkJsonFiles        makeHkJsonFiles               makeTurfRateJsonFiles makeEventJsonFiles            makeMonitorHkJsonFiles        makeWaveformSummaryJsonFiles makeTuffStatusJsonFiles makeGpuPowerSpectrumImages
 )
 add_executable (${loop_prog} ${loop_prog}.cxx)
 target_link_libraries (${loop_prog} LINK_PUBLIC AnitaAware AnitaEvent AnitaCorrelator RootFftwWrapper ${ROOT_LIBRARIES} ${ZLIB_LIBRARIES} )

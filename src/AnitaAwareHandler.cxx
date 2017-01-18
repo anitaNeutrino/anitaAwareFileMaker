@@ -109,24 +109,24 @@ void AnitaAwareHandler::addHeader(RawAnitaHeader *hdPtr) {
 
 
    for(int bit=0;bit<16;bit++) {
-      sprintf(elementName,"l3TrigBit%d",bit);
+      sprintf(elementName,"l3TrigBit%02d",bit);
       sprintf(elementLabel,"L3 %d",bit+1);
       int value=(bit+1)*hdPtr->isInL3Pattern(bit);
       if(value) numL3Trig++;
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value,AwareAverageType::kBitMask,false,bit+1);
       
       
-      sprintf(elementName,"l2TrigMask%d",bit);
+      sprintf(elementName,"l2TrigMask%02d",bit);
       sprintf(elementLabel,"L2 %d",bit+1);
       value=(bit+1)*hdPtr->isInL2Mask(bit);
       if(value) numL2Mask++;
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value,AwareAverageType::kBitMask,false,bit+1);
 
-      sprintf(elementName,"PhiTrigMask%d",bit);
+      sprintf(elementName,"PhiTrigMask%02d",bit);
       sprintf(elementLabel,"Phi %d",bit+1);
       value=(bit+1)*hdPtr->isInPhiMask(bit);
       if(value) numPhiMask++;
-      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value);
+      fHeadSumFile->addVariablePoint(elementName,elementLabel,timeStamp,value,AwareAverageType::kBitMask,false,bit+1);
    }
 
    sprintf(elementName,"numPhiMask");

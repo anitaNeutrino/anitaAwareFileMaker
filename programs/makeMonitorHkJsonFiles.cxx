@@ -67,6 +67,7 @@ int main(int argc, char **argv) {
   TTimeStamp timeStamp((time_t)monitorPtr->realTime,(Int_t)0);
   UInt_t dateInt=timeStamp.GetDate();
   UInt_t lastTime=timeStamp.GetSec();
+  Long64_t lastEntry=0;
   UInt_t runNumber=monitorPtr->run;
 
 
@@ -96,7 +97,10 @@ int main(int argc, char **argv) {
     //    std::cout << "real: " << monitorPtr->realTime << "\n";
     if(monitorPtr->realTime<1e9) continue;
 
-    if(lastTime<monitorPtr->realTime) lastTime=monitorPtr->realTime;
+    if(lastTime<monitorPtr->realTime) {
+       lastTime=monitorPtr->realTime;
+       lastEntry=event;
+    }
 
     //    std::cout << "Run: "<< realEvPtr->
 
@@ -190,4 +194,35 @@ int main(int argc, char **argv) {
 
   AwareRunDatabase::updateRunList(outputDir,instrumentName,runNumber,dateInt);
   AwareRunDatabase::updateDateList(outputDir,instrumentName,runNumber,dateInt);
+
+
+  char statusPage[FILENAME_MAX];
+  sprintf(statusPage,"%s/%s/statusPage/monitorhkStatus.json.gz",outputDir,instrumentName);
+  
+
+  char elementName[180];
+  char elementLabel[180];
+  //Now update status page
+  monitorTree->GetEntry(lastEntry);
+  
+  //get most recent run number
+  runNumber=monitorPtr->run;
+
+  //create status summary object
+  AwareRunSummaryFileMaker monitorStatusSummaryFile(runNumber,"ANITA4",60);
+ 
+  // add disk spaces
+  const int arr_size = 3;
+  int vitalMem[arr_size] = {0,4,5}; 
+  for(auto& i: vitalMem) {
+      sprintf(elementName,"diskSpace%d",i);
+      strcpy(elementLabel,monitorPtr->getDriveName(i));
+      monitorStatusSummaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->getDiskSpaceAvailable(i));
+      sprintf(elementName,"diskPercent%d",i);
+      strcpy(elementLabel,monitorPtr->getDriveName(i));
+      monitorStatusSummaryFile.addVariablePoint(elementName,elementLabel,timeStamp,monitorPtr->getDiskSpacePercentage(i));
+    }
+  
+  monitorStatusSummaryFile.writeTimeJSONFile(statusPage);
+
 }

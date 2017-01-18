@@ -39,7 +39,8 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-
+  
+  
   TFile *fp = TFile::Open(argv[1]);
   if(!fp) {
     std::cerr << "Can't open file\n";
@@ -289,14 +290,50 @@ int main(int argc, char **argv) {
 
 
   char statusPage[FILENAME_MAX];
-  sprintf(statusPage,"%s/%s/statusPage/hkStatus.json",outputDir,instrumentName);
+  sprintf(statusPage,"%s/%s/statusPage",outputDir,instrumentName);
+  gSystem->mkdir(statusPage,kTRUE);
+  sprintf(statusPage,"%s/%s/statusPage/hkStatus.json.gz",outputDir,instrumentName);
   
+  
+  char elementName[180];
+  char elementLabel[180];
+
   //Now update status page
   hkTree->GetEntry(lastEntry);
-  //Now hkPtr is a pointed to the most recent CalibratedHk
+  
+  //get most recent run number
+  runNumber=hkPtr->run;
+ 
+  //create status summary object
+  AwareRunSummaryFileMaker statusSummaryFile(runNumber,"ANITA4",60);
 
-  //For example hkPtr->getPower(0) is the zeroth power
   
   
+  // add vital currents PV (currents1) , batt (currents6)
+  const int arr_size = 2;
+  int vitalCurrent[arr_size] = {1,6}; 
+  for(auto& i : vitalCurrent) {
+      sprintf(elementName,"currents%d",i);
+      strcpy(elementLabel,CalibratedHk::getCurrentName(i));
+      statusSummaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getCurrent(i)); 
+  }
   
+  // add vital Voltages PV (volatage.) and +24V 
+  int vitalVoltage[arr_size] = {4,3};
+  for(auto& i : vitalVoltage) {
+      sprintf(elementName,"voltages%d",i);
+      strcpy(elementLabel,CalibratedHk::getVoltageName(i));
+      statusSummaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getVoltage(i));
+  }
+
+  // add vital internal temps CPU, Core 1, Core 2 
+  for( int i=0; i<NUM_SBS_TEMPS; ++i ) {
+      sprintf(elementName,"intTemps%d",i);
+      strcpy(elementLabel,CalibratedHk::getSBSTempName(i));            
+      statusSummaryFile.addVariablePoint(elementName,elementLabel,timeStamp,hkPtr->getSBSTemp(i));
+  }  
+
+  statusSummaryFile.writeTimeJSONFile(statusPage);  
 }
+
+

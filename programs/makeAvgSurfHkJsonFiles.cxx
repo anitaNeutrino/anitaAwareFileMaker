@@ -13,6 +13,7 @@
 //ANITA EventReaderRoot Includes
 #include "AveragedSurfHk.h"
 #include "AnitaGeomTool.h"
+#include "AnitaVersion.h" 
 
 //ROOT Includes
 #include "TTree.h"
@@ -114,6 +115,10 @@ int main(int argc, char **argv) {
       for(int iring=0;iring<3;iring++) {
 	for(int ipol=0;ipol<2;ipol++) {
 	  ring=AnitaRing::AnitaRing_t(iring);
+
+          pol = AnitaPol::AnitaPol_t(ipol); 
+
+          if (AnitaVersion::get() == 3) ipol += 2; 
 	  trigPol=AnitaTrigPol::AnitaTrigPol_t(ipol);
 	  AnitaGeomTool::getSurfChanTriggerFromPhiRingPol(phi,ring,trigPol,surf,chan);
 	  Int_t avgScaler=avgSurfHkPtr->getScaler(phi,ring,trigPol);
@@ -155,28 +160,63 @@ int main(int argc, char **argv) {
 	  sprintf(elementName,"phiRmsThresh%d_%c%c",phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));
 	  sprintf(elementLabel,"%d-%d  %d%c%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring),AnitaTrigPol::polAsChar(trigPol));      
 	  summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,rmsThresh);
-	}
 
-	AnitaGeomTool::getSurfL1TriggerChanFromPhiRing(phi,ring,surf,l1Chan);
-	Int_t l1Scaler=avgSurfHkPtr->getL1Scaler(phi,ring);
-	Int_t l1ScalerRMS=avgSurfHkPtr->getL1ScalerRMS(phi,ring);
-	//Add avgL1 and rms L1 here
-	sprintf(elementName,"l1Scaler%d_%d",surf,chan);
-	sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
-	
-	sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
-	sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring));      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
 
-	
-	sprintf(elementName,"l1RMSScaler%d_%d",surf,chan);
-	sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);
-	
-	sprintf(elementName,"phiL1RMSScaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
-	sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring));      
-	summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);	
+#ifdef MULTIVERSION_ANITA_ENABLED
+
+          AnitaGeomTool::getSurfL1TriggerChanFromPhiRing(phi,ring,surf,l1Chan);
+          Int_t l1Scaler=avgSurfHkPtr->getL1Scaler(phi,pol,ring);
+          Int_t l1ScalerRMS=avgSurfHkPtr->getL1ScalerRMS(phi,pol,ring);
+
+          if ( (AnitaVersion::get() == 3 && iring == 0) || (AnitaVersion::get() == 4 && ipol == 0))
+          {
+            //Add avgL1 and rms L1 here
+            sprintf(elementName,"l1Scaler%d_%d",surf,chan);
+            sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1,AnitaVersion::get() == 3 ? AnitaPol::polAsChar(pol) : AnitaRing::ringAsChar(ring));
+            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
+            
+            sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
+            sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1,AnitaVersion::get() == 3 ? AnitaPol::polAsChar(pol) : AnitaRing::ringAsChar(ring));      
+            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
+
+            
+            sprintf(elementName,"l1RMSScaler%d_%d",surf,chan);
+            sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1,AnitaVersion::get() == 3 ? AnitaPol::polAsChar(pol) :AnitaRing::ringAsChar(ring));
+            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);
+            
+            sprintf(elementName,"phiL1RMSScaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
+            sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1,AnitaVersion::get() == 3 ? AnitaPol::polAsChar(pol) :AnitaRing::ringAsChar(ring));      
+            summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);	
+          }
+
+#endif
+        }
+
+#ifndef MULTIVERSION_ANITA_ENABLED
+        AnitaGeomTool::getSurfL1TriggerChanFromPhiRing(phi,ring,surf,l1Chan);
+        Int_t l1Scaler=avgSurfHkPtr->getL1Scaler(phi,ring);
+        Int_t l1ScalerRMS=avgSurfHkPtr->getL1ScalerRMS(phiring);
+
+        //Add avgL1 and rms L1 here
+        sprintf(elementName,"l1Scaler%d_%d",surf,chan);
+        sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1, AnitaRing::ringAsChar(ring));
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
+            
+        sprintf(elementName,"phiL1Scaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
+        sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1, AnitaRing::ringAsChar(ring));      
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1Scaler);
+
+        
+        sprintf(elementName,"l1RMSScaler%d_%d",surf,chan);
+        sprintf(elementLabel,"%d-%d %d%c",surf+1,l1Chan+1,phi+1,AnitaRing::ringAsChar(ring));
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);
+            
+        sprintf(elementName,"phiL1RMSScaler%d_%c",phi+1,AnitaRing::ringAsChar(ring));
+        sprintf(elementLabel,"%d-%d  %d%c",surf+1,chan+1,phi+1,AnitaRing::ringAsChar(ring));      
+        summaryFile.addVariablePoint(elementName,elementLabel,timeStamp,l1ScalerRMS);	
+
+#endif
+
       }
     }
 	
